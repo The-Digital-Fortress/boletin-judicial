@@ -36,7 +36,7 @@ const Boletin = () => {
 
   return (
     <div>
-      Boletin
+      <h1>Boletin</h1>
       <Form action='/boletin' method='post' encType='multipart/form-data'>
         <input type='file' name='file' id='input-file-upload' multiple />
         <label id='input-file-upload' htmlFor='input-file-upload'>
