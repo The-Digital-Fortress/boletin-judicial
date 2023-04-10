@@ -1,10 +1,16 @@
 const moment = require('moment-timezone')
 const tabletojson = require('tabletojson').Tabletojson
 
-export async function getBoletinData() {
-  const response = await fetch('http://jsonplaceholder.typicode.com/posts/1')
-  const data = await response.json()
+interface BoletinData {
+  status: number
+  data: {
+    files: Record<string, unknown>[]
+    retrievedFiles: number
+    datetime: string
+  }
+}
 
+export async function getBoletinData(): Promise<BoletinData> {
   // Generate a current date
   const now = moment().tz('America/Los_Angeles')
   const datetime = now.format('YYYY/MM/DD HH:mm:ss')
@@ -29,7 +35,7 @@ export async function getBoletinData() {
         datetime,
       },
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
     return {
       status: 500,
