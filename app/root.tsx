@@ -28,4 +28,7 @@ export default function App() {
   )
 }
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+  { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
+]
