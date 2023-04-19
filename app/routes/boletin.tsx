@@ -81,10 +81,16 @@ const Boletin = () => {
 
       {matchedFiles.length > 0 && (
         <div className='mt-16 mx-auto max-w-7xl lg:px-8'>
-          <div className='flex  border-b-2 justify-between border-gray-300 '>
-            <p className='text-center flex-1 '>Numero de archivo</p>
-            <p className='text-center flex-[2_2_0] '>ID de archivo</p>
-            <p className='text-center flex-[5_5_0] '>Nombre de archivo</p>
+          <div className='flex items-center border-b-2 justify-between border-gray-300 '>
+            <p className='text-center font-semibold text-lg flex-1 '>
+              Numero de archivo
+            </p>
+            <p className='text-center font-semibold text-lg flex-[2_2_0] '>
+              ID de archivo
+            </p>
+            <p className='text-center font-semibold text-lg flex-[5_5_0] '>
+              Nombre de archivo
+            </p>
           </div>
 
           <div>
