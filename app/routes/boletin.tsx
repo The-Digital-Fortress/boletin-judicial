@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { json } from '@remix-run/node'
+import Datepicker from 'react-tailwindcss-datepicker'
 import type { LoaderFunction, ActionFunction } from '@remix-run/node'
 import {
   Form,
@@ -27,6 +28,11 @@ const Boletin = () => {
   const matchedFiles: any = []
   const unmatchedFiles: any = []
 
+  const [value, setValue] = useState({
+    startDate: null,
+    endDate: null,
+  })
+
   if (actionData?.status === 200)
     boletinData?.files.forEach(file => {
       if (actionData?.data?.fileIds.includes(file[1])) matchedFiles.push(file)
@@ -36,6 +42,11 @@ const Boletin = () => {
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
     setFileName(file.name)
+  }
+
+  const handleValueChange = newValue => {
+    console.log('newValue:', newValue)
+    setValue(newValue)
   }
 
   return (
@@ -76,6 +87,17 @@ const Boletin = () => {
           </label>
         </Form>
 
+        <div>
+          <Datepicker
+            inputClassName='py-[.5rem] px-[.75rem] w-full rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
+            primaryColor={'indigo'}
+            asSingle={true}
+            useRange={false}
+            value={value}
+            onChange={handleValueChange}
+          />
+        </div>
+
         {transition.state !== 'idle' && (
           <p className='flex justify-center'>Cargando archivo...</p>
         )}
@@ -83,7 +105,6 @@ const Boletin = () => {
 
       <MatchedFilesTable matchedFiles={matchedFiles} />
       <UnmatchedFilesTable unmatchedFiles={unmatchedFiles} />
-
     </div>
   )
 }
