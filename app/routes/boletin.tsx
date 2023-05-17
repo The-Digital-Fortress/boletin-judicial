@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import { json } from '@remix-run/node'
 import Datepicker from 'react-tailwindcss-datepicker'
 import type { LoaderFunction, ActionFunction } from '@remix-run/node'
@@ -15,38 +16,33 @@ import {
   filterIdColumns,
   getFileIdsColumn,
 } from 'functions/file-management'
-import type { boletinData } from '~/utils/types'
+import type { BoletinData } from '~/utils/types'
 import MatchedFilesTable from '~/components/MatchedTable'
 import UnmatchedFilesTable from '~/components/UnmatchedTable'
 import Navbar from '~/components/Navbar'
+import { BulletList } from 'react-content-loader'
+
+const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
   const [fileName, setFileName] = useState('')
   const transition = useNavigation()
   const actionData = useActionData()
-  const { data: boletinData }: { data?: boletinData } = useLoaderData()
-  const matchedFiles: any = []
-  const unmatchedFiles: any = []
 
-  const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
+  console.log(transition)
+
+  const [date, setDate] = useState({
+    startDate: '',
+    endDate: '',
   })
-
-  if (actionData?.status === 200)
-    boletinData?.files.forEach(file => {
-      if (actionData?.data?.fileIds.includes(file[1])) matchedFiles.push(file)
-      else unmatchedFiles.push(file)
-    })
 
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
     setFileName(file.name)
   }
 
-  const handleValueChange = (newValue: any) => {
-    console.log('newValue:', newValue)
-    setValue(newValue)
+  const handleDateChange = (date: any) => {
+    setDate(date)
   }
 
   return (
@@ -87,10 +83,18 @@ const Boletin = () => {
               primaryColor={'indigo'}
               asSingle={true}
               useRange={false}
-              value={value}
-              onChange={handleValueChange}
+              value={date}
+              onChange={handleDateChange}
             />
           </div>
+
+          <input
+            type='date'
+            name='date-picker'
+            id='date-picker'
+            value={date.startDate}
+            className='hidden'
+          />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
             <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
@@ -100,25 +104,46 @@ const Boletin = () => {
         </Form>
       </div>
 
-      <MatchedFilesTable matchedFiles={matchedFiles} />
-      <UnmatchedFilesTable unmatchedFiles={unmatchedFiles} />
+      {transition.state === 'submitting' ? (
+        <div className='mx-auto max-w-7xl lg:px-8'>
+          <BulletListLoader />
+        </div>
+      ) : (
+        <>
+          <MatchedFilesTable matchedFiles={actionData?.data?.matchedFiles} />
+          <UnmatchedFilesTable
+            unmatchedFiles={actionData?.data?.unmatchedFiles}
+          />
+        </>
+      )}
     </div>
   )
 }
 
 export default Boletin
 
-export const loader: LoaderFunction = async () => {
-  const boletinData = await getBoletinData('2023-05-03')
-  return json(boletinData)
-}
-
 export const action: ActionFunction = async ({ request }) => {
   const body = await request.formData()
+
   const file = body.get('file')
+  const date = body.get('date-picker')
+
+  if (!date)
+    return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
+
   const fileSheet = await fileUpload(file)
   const idsColumn = await getFileIdsColumn(fileSheet)
   const filteredIds = await filterIdColumns(idsColumn)
   const paddedIds = await addZeroPaddingToIds(filteredIds)
-  return json({ status: 200, data: paddedIds })
+
+  const matchedFiles: any = []
+  const unmatchedFiles: any = []
+  const boletinData = await getBoletinData(date)
+  if (boletinData.status === 200)
+    boletinData?.data?.files.forEach(file => {
+      if (paddedIds.fileIds.includes(file[1])) matchedFiles.push(file)
+      else unmatchedFiles.push(file)
+    })
+
+  return json({ status: 200, data: { matchedFiles, unmatchedFiles } })
 }

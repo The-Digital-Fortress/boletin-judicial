@@ -1,47 +1,47 @@
-import React from 'react';
+import React from 'react'
 
-function UnmatchedFilesTable(props: { unmatchedFiles: any[]; }) {
+function UnmatchedFilesTable(props: { unmatchedFiles: any[] }) {
+  return (
+    <div>
+      {props?.unmatchedFiles?.length > 0 && (
+        <div className='mt-16 mx-auto max-w-7xl lg:px-8'>
+          <p className='text-center font-semibold text-xl text-black py-4 bg-rose-500 rounded-md border-2 border-rose-400'>
+            Expedientes no encontrados
+          </p>
+          <div className='flex items-center border-b-2 justify-between border-gray-300 '>
+            <p className='text-center font-semibold text-lg flex-1 '>
+              Numero de archivo
+            </p>
+            <p className='text-center font-semibold text-lg flex-[2_2_0] '>
+              ID de archivo
+            </p>
+            <p className='text-center font-semibold text-lg flex-[5_5_0] '>
+              Nombre de archivo
+            </p>
+          </div>
 
-    return (
-        <div>
-            {props.unmatchedFiles.length > 0 && (
-                <div className='mt-16 mx-auto max-w-7xl lg:px-8'>
-                    <p className='text-center font-semibold text-xl text-black py-4 bg-rose-500 rounded-md border-2 border-rose-400'>Expedientes no encontrados</p>
-                    <div className='flex items-center border-b-2 justify-between border-gray-300 '>
-                        <p className='text-center font-semibold text-lg flex-1 '>
-                            Numero de archivo
-                        </p>
-                        <p className='text-center font-semibold text-lg flex-[2_2_0] '>
-                            ID de archivo
-                        </p>
-                        <p className='text-center font-semibold text-lg flex-[5_5_0] '>
-                            Nombre de archivo
-                        </p>
-                    </div>
-
-                    <div>
-                        {props.unmatchedFiles.map((file: any) => (
-                            <div
-                                key={file[1]}
-                                className='flex py-4 items-center justify-between  border-b border-gray-300'
-                            >
-                                <p className='font-semibold flex-1 text-center text-gray-400'>
-                                    {file[0]}
-                                </p>
-                                <p className='font-semibold flex-[2_2_0] text-center'>
-                                    {file[1]}
-                                </p>
-                                <p className='font-semibold flex-[5_5_0] text-center text-gray-400'>
-                                    {file[2]}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )
-            }
+          <div>
+            {props.unmatchedFiles.map((file: any) => (
+              <div
+                key={file[1]}
+                className='flex py-4 items-center justify-between  border-b border-gray-300'
+              >
+                <p className='font-semibold flex-1 text-center text-gray-400'>
+                  {file[0]}
+                </p>
+                <p className='font-semibold flex-[2_2_0] text-center'>
+                  {file[1]}
+                </p>
+                <p className='font-semibold flex-[5_5_0] text-center text-gray-400'>
+                  {file[2]}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-    )
+      )}
+    </div>
+  )
 }
 
-export default UnmatchedFilesTable;
+export default UnmatchedFilesTable
