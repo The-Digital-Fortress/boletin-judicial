@@ -10,16 +10,18 @@ interface BoletinData {
   }
 }
 
-export async function getBoletinData(): Promise<BoletinData> {
+export async function getBoletinData(date: string): Promise<BoletinData> {
   // Generate a current date
   const now = moment().tz('America/Los_Angeles')
   const datetime = now.format('YYYY/MM/DD HH:mm:ss')
   const year = now.format('YYYY')
 
   //   const formattedDate = now.format("YYMMDD")
-  const formattedDate = '230331'
+  const formattedDate = moment(date).format('YYMMDD')
 
   const URL = `http://www.pjbc.gob.mx/boletinj/${year}/my_html/ti${formattedDate}.htm`
+
+  console.log(URL)
 
   // Get htm data and convert it to JSON
   try {

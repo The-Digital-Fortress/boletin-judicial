@@ -15,10 +15,10 @@ import {
   filterIdColumns,
   getFileIdsColumn,
 } from 'functions/file-management'
-import Example from '~/components/Navbar'
 import type { boletinData } from '~/utils/types'
 import MatchedFilesTable from '~/components/MatchedTable'
 import UnmatchedFilesTable from '~/components/UnmatchedTable'
+import Navbar from '~/components/Navbar'
 
 const Boletin = () => {
   const [fileName, setFileName] = useState('')
@@ -44,14 +44,14 @@ const Boletin = () => {
     setFileName(file.name)
   }
 
-  const handleValueChange = newValue => {
+  const handleValueChange = (newValue: any) => {
     console.log('newValue:', newValue)
     setValue(newValue)
   }
 
   return (
     <div>
-      <Example />
+      <Navbar />
       <div className='mx-auto mt-16 max-w-7xl lg:px-8 flex justify-between'>
         <Form
           action='/boletin'
@@ -75,10 +75,22 @@ const Boletin = () => {
           />
 
           {fileName && (
-            <p className='cursor-pointer rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+            <p className=' rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
               {fileName}
             </p>
           )}
+
+          <div>
+            <Datepicker
+              placeholder='Seleccionar fecha'
+              inputClassName='py-[.5rem] px-[.75rem] w-full rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
+              primaryColor={'indigo'}
+              asSingle={true}
+              useRange={false}
+              value={value}
+              onChange={handleValueChange}
+            />
+          </div>
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
             <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
@@ -86,21 +98,6 @@ const Boletin = () => {
             </button>
           </label>
         </Form>
-
-        <div>
-          <Datepicker
-            inputClassName='py-[.5rem] px-[.75rem] w-full rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
-            primaryColor={'indigo'}
-            asSingle={true}
-            useRange={false}
-            value={value}
-            onChange={handleValueChange}
-          />
-        </div>
-
-        {transition.state !== 'idle' && (
-          <p className='flex justify-center'>Cargando archivo...</p>
-        )}
       </div>
 
       <MatchedFilesTable matchedFiles={matchedFiles} />
@@ -112,7 +109,7 @@ const Boletin = () => {
 export default Boletin
 
 export const loader: LoaderFunction = async () => {
-  const boletinData = await getBoletinData()
+  const boletinData = await getBoletinData('2023-05-03')
   return json(boletinData)
 }
 
