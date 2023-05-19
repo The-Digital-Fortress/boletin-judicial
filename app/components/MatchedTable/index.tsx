@@ -15,6 +15,9 @@ function MatchedFilesTable(props: { matchedFiles: any[] }) {
             <p className='text-center font-semibold text-lg flex-[2_2_0] '>
               ID de archivo
             </p>
+            <p className='text-center font-semibold text-lg flex-[3_3_0] '>
+              Tribunal / Juzgado
+            </p>
             <p className='text-center font-semibold text-lg flex-[5_5_0] '>
               Nombre de archivo
             </p>
@@ -31,6 +34,9 @@ function MatchedFilesTable(props: { matchedFiles: any[] }) {
                 </p>
                 <p className='font-semibold flex-[2_2_0] text-center'>
                   {file[1]}
+                </p>
+                <p className='font-semibold flex-[3_3_0] text-center text-gray-400'>
+                  {file[3]}
                 </p>
                 <p className='font-semibold flex-[5_5_0] text-center text-gray-400'>
                   {file[2]}

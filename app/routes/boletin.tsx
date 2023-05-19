@@ -1,14 +1,8 @@
 import { useState } from 'react'
-import type { FormEvent } from 'react'
 import { json } from '@remix-run/node'
 import Datepicker from 'react-tailwindcss-datepicker'
-import type { LoaderFunction, ActionFunction } from '@remix-run/node'
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  useNavigation,
-} from '@remix-run/react'
+import type { ActionFunction } from '@remix-run/node'
+import { Form, useActionData, useNavigation } from '@remix-run/react'
 import { getBoletinData } from 'functions/boletin'
 import {
   addZeroPaddingToIds,
@@ -16,7 +10,6 @@ import {
   filterIdColumns,
   getFileIdsColumn,
 } from 'functions/file-management'
-import type { BoletinData } from '~/utils/types'
 import MatchedFilesTable from '~/components/MatchedTable'
 import UnmatchedFilesTable from '~/components/UnmatchedTable'
 import Navbar from '~/components/Navbar'
@@ -28,8 +21,6 @@ const Boletin = () => {
   const [fileName, setFileName] = useState('')
   const transition = useNavigation()
   const actionData = useActionData()
-
-  console.log(transition)
 
   const [date, setDate] = useState({
     startDate: '',
@@ -61,6 +52,7 @@ const Boletin = () => {
           >
             Seleccionar archivo
           </label>
+
           <input
             onChange={handleFileUpload}
             type='file'
@@ -89,6 +81,7 @@ const Boletin = () => {
           </div>
 
           <input
+            readOnly
             type='date'
             name='date-picker'
             id='date-picker'
@@ -128,6 +121,9 @@ export const action: ActionFunction = async ({ request }) => {
   const file = body.get('file')
   const date = body.get('date-picker')
 
+  if (!file)
+    return json({ status: 400, message: 'Es necesario subir un archivo' })
+
   if (!date)
     return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
@@ -139,10 +135,14 @@ export const action: ActionFunction = async ({ request }) => {
   const matchedFiles: any = []
   const unmatchedFiles: any = []
   const boletinData = await getBoletinData(date)
+
   if (boletinData.status === 200)
-    boletinData?.data?.files.forEach(file => {
-      if (paddedIds.fileIds.includes(file[1])) matchedFiles.push(file)
-      else unmatchedFiles.push(file)
+    boletinData?.files?.forEach(jury => {
+      jury?.files.forEach(file => {
+        if (paddedIds.fileIds.includes(file[1]))
+          matchedFiles.push({ '3': jury?.key, ...file })
+        else unmatchedFiles.push({ '3': jury?.key, ...file })
+      })
     })
 
   return json({ status: 200, data: { matchedFiles, unmatchedFiles } })
