@@ -38,8 +38,6 @@ const Boletin = () => {
     setDate(date)
   }
 
-  console.log(municipality)
-
   return (
     <div>
       <Navbar />
@@ -94,6 +92,14 @@ const Boletin = () => {
           />
 
           <Dropdown setMunicipality={setMunicipality} />
+          <input
+            type='text'
+            name='municipality'
+            id='municipality'
+            value={municipality}
+            className='hidden'
+            readOnly
+          />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
             <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
@@ -126,6 +132,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   const file = body.get('file')
   const date = body.get('date-picker')
+  const municipality = body.get('municipality')
+
+  const municipalityMap = {
+    Tijuana: 'ti',
+    Mexicali: 'me',
+    Ensenada: 'en',
+    Tecate: 'te',
+  }
 
   if (!file)
     return json({ status: 400, message: 'Es necesario subir un archivo' })
@@ -140,7 +154,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const matchedFiles: any = []
   const unmatchedFiles: any = []
-  const boletinData = await getBoletinData(date)
+  const boletinData = await getBoletinData(
+    date,
+    municipalityMap[municipality || '']
+  )
 
   if (boletinData.status === 200)
     boletinData?.files?.forEach(jury => {
@@ -151,5 +168,9 @@ export const action: ActionFunction = async ({ request }) => {
       })
     })
 
-  return json({ status: 200, data: { matchedFiles, unmatchedFiles } })
+  return json({
+    status: 200,
+    data: { matchedFiles, unmatchedFiles },
+    url: boletinData.url,
+  })
 }

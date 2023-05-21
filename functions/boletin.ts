@@ -9,11 +9,13 @@ interface BoletinData {
     retrievedFiles: number
     datetime: string
     tableData: any
+    url: string
   }
 }
 
 export async function getBoletinData(
-  date: string | null | FormDataEntryValue
+  date: string | null | FormDataEntryValue,
+  municipality: string
 ): Promise<BoletinData> {
   // Generate a current date
   const now = moment().tz('America/Los_Angeles')
@@ -23,7 +25,7 @@ export async function getBoletinData(
   //   const formattedDate = now.format("YYMMDD")
   const formattedDate = moment(date).format('YYMMDD')
 
-  const URL = `http://www.pjbc.gob.mx/boletinj/${year}/my_html/ti${formattedDate}.htm`
+  const URL = `http://www.pjbc.gob.mx/boletinj/${year}/my_html/${municipality}${formattedDate}.htm`
 
   // Get htm data and convert it to JSON
 
@@ -65,6 +67,7 @@ export async function getBoletinData(
       status: 200,
       files: flattenedJuryFilesObj,
       datetime,
+      url: URL,
     }
   } catch (error: any) {
     console.error(error)
