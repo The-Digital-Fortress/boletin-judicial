@@ -6,8 +6,18 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Dropdown() {
+type Props = {
+  setMunicipality: (value: string) => void
+}
+
+export default function Dropdown({ setMunicipality }: Props) {
   const [selectedItem, setSelectedItem] = useState('')
+
+  const handleSelection = (e: any) => {
+    e.preventDefault()
+    setSelectedItem(e.target.textContent)
+    setMunicipality(e.target.textContent)
+  }
 
   return (
     <Menu as='div' className='relative inline-block text-left'>
@@ -33,12 +43,15 @@ export default function Dropdown() {
         <Menu.Items className='absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='py-1'>
             <Menu.Item>
-              {({ active }) => (
+              {({ active, close }) => (
                 <button
-                  onClick={() => setSelectedItem('Mexicali')}
+                  onClick={e => {
+                    handleSelection(e)
+                    close()
+                  }}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm w-full'
                   )}
                 >
                   Mexicali
@@ -46,12 +59,15 @@ export default function Dropdown() {
               )}
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
+              {({ active, close }) => (
                 <button
-                  onClick={() => setSelectedItem('Tijuana')}
+                  onClick={e => {
+                    handleSelection(e)
+                    close()
+                  }}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm w-full'
                   )}
                 >
                   Tijuana
@@ -59,12 +75,15 @@ export default function Dropdown() {
               )}
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
+              {({ active, close }) => (
                 <button
-                  onClick={() => setSelectedItem('Ensenada')}
+                  onClick={e => {
+                    handleSelection(e)
+                    close()
+                  }}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm w-full'
                   )}
                 >
                   Ensenada
@@ -72,12 +91,15 @@ export default function Dropdown() {
               )}
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
+              {({ active, close }) => (
                 <button
-                  onClick={() => setSelectedItem('Tecate')}
+                  onClick={e => {
+                    handleSelection(e)
+                    close()
+                  }}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm w-full'
                   )}
                 >
                   Tecate

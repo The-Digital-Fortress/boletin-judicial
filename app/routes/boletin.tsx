@@ -20,13 +20,14 @@ const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
   const [fileName, setFileName] = useState('')
-  const transition = useNavigation()
-  const actionData = useActionData()
-
+  const [municipality, setMunicipality] = useState('')
   const [date, setDate] = useState({
     startDate: '',
     endDate: '',
   })
+
+  const transition = useNavigation()
+  const actionData = useActionData()
 
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
@@ -36,6 +37,8 @@ const Boletin = () => {
   const handleDateChange = (date: any) => {
     setDate(date)
   }
+
+  console.log(municipality)
 
   return (
     <div>
@@ -90,7 +93,7 @@ const Boletin = () => {
             className='hidden'
           />
 
-          <Dropdown />
+          <Dropdown setMunicipality={setMunicipality} />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
             <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
