@@ -14,6 +14,7 @@ import MatchedFilesTable from '~/components/MatchedTable'
 import UnmatchedFilesTable from '~/components/UnmatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
+import Dropdown from '~/components/Dropdown'
 
 const BulletListLoader = () => <BulletList />
 
@@ -88,6 +89,8 @@ const Boletin = () => {
             value={date.startDate}
             className='hidden'
           />
+
+          <Dropdown />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
             <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
