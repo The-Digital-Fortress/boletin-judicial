@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { json } from '@remix-run/node'
 import Datepicker from 'react-tailwindcss-datepicker'
 import type { ActionFunction } from '@remix-run/node'
-import { Form, useActionData, useNavigation } from '@remix-run/react'
+import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { getBoletinData } from 'functions/boletin'
 import {
   addZeroPaddingToIds,
@@ -41,12 +41,12 @@ const Boletin = () => {
   return (
     <div>
       <Navbar />
-      <div className='mx-auto mt-16 max-w-7xl lg:px-8 flex justify-between'>
+      <div className='mx-auto mt-16 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
         <Form
           action='/boletin'
           method='post'
           encType='multipart/form-data'
-          className='flex gap-8 items-center'
+          className='flex gap-4 items-center'
         >
           <label
             htmlFor='input-file-upload'
@@ -107,6 +107,20 @@ const Boletin = () => {
             </button>
           </label>
         </Form>
+
+        {actionData?.url && (
+          <div className='flex flex-col gap-2'>
+            <span className='font-semibold leading-6'>Boletin comparado</span>
+
+            <Link
+              to={actionData.url}
+              target='_blank'
+              className='rounded-md border-2 w-fit border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            >
+              {actionData?.url}
+            </Link>
+          </div>
+        )}
       </div>
 
       {transition.state === 'submitting' ? (
