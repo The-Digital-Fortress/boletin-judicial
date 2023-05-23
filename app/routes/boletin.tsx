@@ -29,6 +29,8 @@ const Boletin = () => {
   const transition = useNavigation()
   const actionData = useActionData()
 
+  console.log(actionData)
+
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
     setFileName(file.name)
@@ -41,16 +43,16 @@ const Boletin = () => {
   return (
     <div>
       <Navbar />
-      <div className='mx-auto mt-16 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+      <div className='mx-auto mt-4 lg:mt-16 px-2 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
         <Form
           action='/boletin'
           method='post'
           encType='multipart/form-data'
-          className='flex gap-4 items-center'
+          className='flex flex-col lg:flex-row gap-4 items-center'
         >
           <label
             htmlFor='input-file-upload'
-            className='cursor-pointer rounded-md border-2 border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            className='w-full lg:max-w-[200px] cursor-pointer rounded-md border-2 border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
             Seleccionar archivo
           </label>
@@ -65,15 +67,15 @@ const Boletin = () => {
           />
 
           {fileName && (
-            <p className=' rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+            <p className='w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
               {fileName}
             </p>
           )}
 
-          <div>
+          <div className='w-full lg:max-w-[200px]'>
             <Datepicker
               placeholder='Seleccionar fecha'
-              inputClassName='py-[.5rem] px-[.75rem] w-full rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
+              inputClassName='py-[.5rem] px-[.75rem] w-full  rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
               primaryColor={'indigo'}
               asSingle={true}
               useRange={false}
@@ -92,6 +94,7 @@ const Boletin = () => {
           />
 
           <Dropdown setMunicipality={setMunicipality} />
+
           <input
             type='text'
             name='municipality'
@@ -102,7 +105,7 @@ const Boletin = () => {
           />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
-            <button className='upload-button className="text-sm font-semibold leading-6 text-gray-900"'>
+            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>
               Subir archivo →
             </button>
           </label>
@@ -110,12 +113,14 @@ const Boletin = () => {
 
         {actionData?.url && (
           <div className='flex flex-col gap-2'>
-            <span className='font-semibold leading-6'>Boletin comparado</span>
+            <span className='o font-semibold leading-6 text-indigo-400'>
+              Boletin comparado
+            </span>
 
             <Link
               to={actionData.url}
               target='_blank'
-              className='rounded-md border-2 w-fit border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+              className='rounded-md w-full lg:w-fit border-2  border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
             >
               {actionData?.url}
             </Link>
@@ -124,7 +129,7 @@ const Boletin = () => {
       </div>
 
       {transition.state === 'submitting' ? (
-        <div className='mx-auto max-w-7xl lg:px-8'>
+        <div className='mx-auto max-w-7xl px-2 lg:px-8'>
           <BulletListLoader />
         </div>
       ) : (
@@ -134,6 +139,13 @@ const Boletin = () => {
             unmatchedFiles={actionData?.data?.unmatchedFiles}
           />
         </>
+      )}
+
+      {/* Render a message when boletin isn't availabel */}
+      {actionData?.status === 204 && !(transition.state === 'submitting') && (
+        <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between text-indigo-400 font-semibold'>
+          {actionData.message}
+        </div>
       )}
     </div>
   )
@@ -172,6 +184,12 @@ export const action: ActionFunction = async ({ request }) => {
     date,
     municipalityMap[municipality || '']
   )
+
+  if (boletinData.status === 204)
+    return json({
+      status: 204,
+      message: boletinData.data.message,
+    })
 
   if (boletinData.status === 200)
     boletinData?.files?.forEach(jury => {

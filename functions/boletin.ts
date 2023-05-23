@@ -5,11 +5,12 @@ const tabletojson = require('tabletojson').Tabletojson
 interface BoletinData {
   status: number
   data: {
-    files: Record<string, unknown>[]
-    retrievedFiles: number
-    datetime: string
-    tableData: any
-    url: string
+    files?: Record<string, unknown>[]
+    retrievedFiles?: number
+    datetime?: string
+    tableData?: any
+    url?: string
+    message?: string
   }
 }
 
@@ -36,6 +37,13 @@ export async function getBoletinData(
     // Process the HTML here
     const dom = new jsdom.JSDOM(html)
     const mainSection = dom.window.document.querySelector('.WordSection1')
+
+    if (!mainSection) {
+      return {
+        status: 204,
+        data: { message: 'No hay informacion de este boletin' },
+      }
+    }
 
     const juryCases = {}
     let currentJury = ''
