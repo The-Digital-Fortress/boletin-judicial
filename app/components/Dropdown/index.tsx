@@ -20,9 +20,9 @@ export default function Dropdown({ setMunicipality }: Props) {
   }
 
   return (
-    <Menu as='div' className='relative inline-block text-left'>
+    <Menu as='div' className='relative inline-block text-left w-full'>
       <div>
-        <Menu.Button className='flex items-center w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 font-semibold text-indigo-600 border-2 border-indigo-600 '>
+        <Menu.Button className='flex items-center w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 font-semibold text-indigo-600 border-2 border-indigo-600 '>
           {selectedItem ? selectedItem : 'Selecciona un municipio'}
           <ChevronDownIcon
             className='-mr-1 h-5 w-5 text-indigo-600'
