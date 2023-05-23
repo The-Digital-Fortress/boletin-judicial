@@ -1,13 +1,13 @@
-export type boletinData = {
+export type BoletinData = {
   datetime: string
-  files: boletinFile[]
+  files: BoletinFile[]
   retrievedFiles: number
 }
 
-export type boletinFile = {
+export type BoletinFile = {
   0: string
   1: string
   2: string
 }
 
-export type fileIds = string[]
+export type FileIds = string[]
