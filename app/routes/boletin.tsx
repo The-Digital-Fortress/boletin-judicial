@@ -29,8 +29,6 @@ const Boletin = () => {
   const transition = useNavigation()
   const actionData = useActionData()
 
-  console.log(actionData)
-
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
     setFileName(file.name)
