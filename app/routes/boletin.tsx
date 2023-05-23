@@ -1,5 +1,7 @@
+import type { LinksFunction } from "@remix-run/node";
 import { useState } from 'react'
 import { json } from '@remix-run/node'
+import type { V2_MetaFunction } from "@remix-run/react";
 import Datepicker from 'react-tailwindcss-datepicker'
 import type { ActionFunction } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
@@ -16,6 +18,20 @@ import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
+
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Expediente Legal - Buscador" }];
+};
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "icon",
+      href: "https://user-images.githubusercontent.com/60411196/240128272-722a7af9-a5e7-4ae5-8d16-bbb4b650668f.png",
+      type: "image/png",
+    },
+  ];
+}
 
 const BulletListLoader = () => <BulletList />
 
@@ -121,7 +137,7 @@ const Boletin = () => {
             <Link
               to={actionData.url}
               target='_blank'
-              className='rounded-md w-full lg:w-fit border-2  border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+              className='rounded-md w-full lg:w-fit border-2  border-indigo-600 bg-indigo-600 px-1 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
             >
               {actionData?.url}
             </Link>
@@ -136,9 +152,9 @@ const Boletin = () => {
       ) : (
         <>
           <MatchedFilesTable matchedFiles={actionData?.data?.matchedFiles} />
-          <UnmatchedFilesTable
+          {/* <UnmatchedFilesTable
             unmatchedFiles={actionData?.data?.unmatchedFiles}
-          />
+          /> */}
         </>
       )}
 
