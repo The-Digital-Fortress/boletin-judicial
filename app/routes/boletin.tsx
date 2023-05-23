@@ -15,15 +15,18 @@ import UnmatchedFilesTable from '~/components/UnmatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
+import moment from 'moment-timezone'
 
 const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
   const [fileName, setFileName] = useState('')
-  const [municipality, setMunicipality] = useState('')
+  const [municipality, setMunicipality] = useState('Tijuana')
+  const now = moment().tz('America/Los_Angeles')
+  const today = now.format('YYYY-MM-DD')
   const [date, setDate] = useState({
-    startDate: '',
-    endDate: '',
+    startDate: today,
+    endDate: today,
   })
 
   const transition = useNavigation()

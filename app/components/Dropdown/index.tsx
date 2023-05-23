@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function Dropdown({ setMunicipality }: Props) {
-  const [selectedItem, setSelectedItem] = useState('')
+  const [selectedItem, setSelectedItem] = useState('Tijuana')
 
   const handleSelection = (e: any) => {
     e.preventDefault()
