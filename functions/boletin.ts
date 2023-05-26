@@ -1,6 +1,7 @@
 const moment = require('moment-timezone')
 const jsdom = require('jsdom')
 const tabletojson = require('tabletojson').Tabletojson
+const fs = require('fs')
 
 interface BoletinData {
   status: number
@@ -30,61 +31,97 @@ export async function getBoletinData(
 
   // Get htm data and convert it to JSON
 
-  try {
-    const response = await fetch(URL)
-    const html = await response.text()
-
-    // Process the HTML here
-    const dom = new jsdom.JSDOM(html)
-    const mainSection = dom.window.document.querySelector('.WordSection1')
-
-    if (!mainSection) {
-      return {
-        status: 204,
-        data: { message: 'No hay informacion de este boletin' },
-      }
+  fs.readFile(`/tmp/${formattedDate}.json`, 'utf8', function (err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('file exists');
+      console.log(data);
     }
+  });
 
-    const juryCases = {}
-    let currentJury = ''
-
-    // The following code iterates through each item in the jury file and uses the previous variables to
-    // keep track of which files corespond to which jury and change jury when a new section is reached
-    for (const child of mainSection.children) {
-      // @ts-ignore
-      if (child.tagName === 'DIV') {
-        const reformattedContent = child.textContent.replace(/\n/g, ' ').trim()
-        juryCases[reformattedContent] = []
-        currentJury = reformattedContent
-      } else if (child.tagName === 'TABLE') {
-        const jsonTableData = tabletojson.convert(child.outerHTML)
-        const jsonTableDataFlat = jsonTableData.flat(1)
-        juryCases[currentJury].push(jsonTableDataFlat)
-      }
-    }
-
-    // Flatten out each array for each jury
-    const flattenedJuryFilesObj = Object.entries(juryCases).map(item => {
-      return {
-        key: item[0],
-        files: item[1].flat(),
-      }
-    })
-
+  if (fs.existsSync(`/tmp/${formattedDate}.json`)) {
+    console.log('file exists');
+    const data = fs.readFileSync(`/tmp/${formattedDate}.json`, 'utf8');
+    console.log(data);
     return {
       status: 200,
-      files: flattenedJuryFilesObj,
-      datetime,
-      url: URL,
-    }
-  } catch (error: any) {
-    console.error(error)
-    return {
-      status: 500,
       data: {
-        error: error.message,
+        files: JSON.parse(data),
         datetime,
+        url: URL,
       },
+    }
+  } else {
+    try {
+      const response = await fetch(URL)
+      const html = await response.text()
+
+      // Process the HTML here
+      const dom = new jsdom.JSDOM(html)
+      const mainSection = dom.window.document.querySelector('.WordSection1')
+
+      if (!mainSection) {
+        return {
+          status: 204,
+          data: { message: 'No hay informacion de este boletin' },
+        }
+      }
+
+      const juryCases = {}
+      let currentJury = ''
+
+      // The following code iterates through each item in the jury file and uses the previous variables to
+      // keep track of which files corespond to which jury and change jury when a new section is reached
+      for (const child of mainSection.children) {
+        // @ts-ignore
+        if (child.tagName === 'DIV') {
+          const reformattedContent = child.textContent.replace(/\n/g, ' ').trim()
+          juryCases[reformattedContent] = []
+          currentJury = reformattedContent
+        } else if (child.tagName === 'TABLE') {
+          const jsonTableData = tabletojson.convert(child.outerHTML)
+          const jsonTableDataFlat = jsonTableData.flat(1)
+          juryCases[currentJury].push(jsonTableDataFlat)
+        }
+      }
+
+      // Flatten out each array for each jury
+      const flattenedJuryFilesObj = Object.entries(juryCases).map(item => {
+        return {
+          key: item[0],
+          files: item[1].flat(),
+        }
+      })
+
+      exports.handler = function (event, context) {
+        fs.writeFile(`/tmp/${formattedDate}.json`, JSON.stringify(flattenedJuryFilesObj), function (err) {
+          if (err) {
+            context.fail(err);
+          } else {
+            context.succeed('Success');
+          }
+        }, context.done);
+      }
+
+      return {
+        status: 200,
+        files: flattenedJuryFilesObj,
+        datetime,
+        url: URL,
+      }
+    } catch (error: any) {
+      console.error(error)
+      return {
+        status: 500,
+        data: {
+          error: error.message,
+          datetime,
+        },
+      }
     }
   }
 }
+
+
+
