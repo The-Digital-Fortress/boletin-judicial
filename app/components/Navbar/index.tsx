@@ -6,8 +6,6 @@ import logo from '~/assets/logo.png'
 const navigation = [
   { name: 'Inicio', href: '/', current: false },
   { name: 'Boletin', href: '/boletin', current: false },
-  { name: 'Inicio', href: '/', current: false },
-  { name: 'Boletin', href: '/boletin', current: false },
 ]
 
 function classNames(...classes: string[]) {
