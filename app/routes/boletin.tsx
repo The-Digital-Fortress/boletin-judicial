@@ -1,3 +1,4 @@
+import type { LinksFunction } from '@remix-run/node'
 import { useState } from 'react'
 import { json } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
