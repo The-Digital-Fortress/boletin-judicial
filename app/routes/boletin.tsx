@@ -1,7 +1,7 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from '@remix-run/node'
 import { useState } from 'react'
 import { json } from '@remix-run/node'
-import type { V2_MetaFunction } from "@remix-run/react";
+import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
 import type { ActionFunction } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
@@ -13,24 +13,13 @@ import {
   getFileIdsColumn,
 } from 'functions/file-management'
 import MatchedFilesTable from '~/components/MatchedTable'
-import UnmatchedFilesTable from '~/components/UnmatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 
 export const meta: V2_MetaFunction = () => {
-  return [{ title: "Expediente Legal - Buscador" }];
-};
-
-export const links: LinksFunction = () => {
-  return [
-    {
-      rel: "icon",
-      href: "https://user-images.githubusercontent.com/60411196/240128272-722a7af9-a5e7-4ae5-8d16-bbb4b650668f.png",
-      type: "image/png",
-    },
-  ];
+  return [{ title: 'Expediente Legal - Buscador' }]
 }
 
 const BulletListLoader = () => <BulletList />
@@ -130,7 +119,7 @@ const Boletin = () => {
 
         {actionData?.url && (
           <div className='flex flex-col gap-2'>
-            <span className='o font-semibold leading-6 text-indigo-400'>
+            <span className='font-semibold leading-6 text-indigo-400'>
               Boletin comparado
             </span>
 

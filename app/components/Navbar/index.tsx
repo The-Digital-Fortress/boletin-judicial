@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Disclosure } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import logo from '~/assets/logo.png'
 
 const navigation = [
+  { name: 'Inicio', href: '/', current: false },
+  { name: 'Boletin', href: '/boletin', current: false },
   { name: 'Inicio', href: '/', current: false },
   { name: 'Boletin', href: '/boletin', current: false },
 ]
@@ -33,12 +36,12 @@ export default function Navbar() {
                 <div className='flex flex-shrink-0 items-center'>
                   <img
                     className='block h-8 w-auto lg:hidden'
-                    src='https://user-images.githubusercontent.com/60411196/240128272-722a7af9-a5e7-4ae5-8d16-bbb4b650668f.png'
+                    src={logo}
                     alt='Your Company'
                   />
                   <img
                     className='hidden h-8 w-auto lg:block'
-                    src='https://user-images.githubusercontent.com/60411196/240128272-722a7af9-a5e7-4ae5-8d16-bbb4b650668f.png'
+                    src={logo}
                     alt='Your Company'
                   />
                 </div>
