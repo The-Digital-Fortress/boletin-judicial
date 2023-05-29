@@ -33,17 +33,17 @@ export async function getBoletinData(
 
   fs.readFile(`/tmp/${formattedDate}.json`, 'utf8', function (err, data) {
     if (err) {
-      console.log(err);
+      console.log(err)
     } else {
-      console.log('file exists');
-      console.log(data);
+      console.log('file exists')
+      console.log(data)
     }
-  });
+  })
 
   if (fs.existsSync(`/tmp/${formattedDate}.json`)) {
-    console.log('file exists');
-    const data = fs.readFileSync(`/tmp/${formattedDate}.json`, 'utf8');
-    console.log(data);
+    console.log('file exists')
+    const data = fs.readFileSync(`/tmp/${formattedDate}.json`, 'utf8')
+    console.log(data)
     return {
       status: 200,
       data: {
@@ -76,7 +76,9 @@ export async function getBoletinData(
       for (const child of mainSection.children) {
         // @ts-ignore
         if (child.tagName === 'DIV') {
-          const reformattedContent = child.textContent.replace(/\n/g, ' ').trim()
+          const reformattedContent = child.textContent
+            .replace(/\n/g, ' ')
+            .trim()
           juryCases[reformattedContent] = []
           currentJury = reformattedContent
         } else if (child.tagName === 'TABLE') {
@@ -95,13 +97,18 @@ export async function getBoletinData(
       })
 
       exports.handler = function (event, context) {
-        fs.writeFile(`/tmp/${formattedDate}.json`, JSON.stringify(flattenedJuryFilesObj), function (err) {
-          if (err) {
-            context.fail(err);
-          } else {
-            context.succeed('Success');
-          }
-        }, context.done);
+        fs.writeFile(
+          `/tmp/${formattedDate}.json`,
+          JSON.stringify(flattenedJuryFilesObj),
+          function (err) {
+            if (err) {
+              context.fail(err)
+            } else {
+              context.succeed('Success')
+            }
+          },
+          context.done
+        )
       }
 
       return {
@@ -122,6 +129,3 @@ export async function getBoletinData(
     }
   }
 }
-
-
-

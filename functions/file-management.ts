@@ -17,7 +17,7 @@ export async function getFileIdsColumn(sheet: any) {
   for (let i = range.s.r; i <= range.e.r; i++) {
     const cell = sheet[xlsx.utils.encode_cell({ r: i, c: 1 })] // Change the second argument to the index of the column you want to read (0-indexed)
     if (cell && cell.t === 's') {
-      column.push(cell.v)
+      column.push(cell.v.trim()) // Clean the ID before adding to the array
     } else {
       column.push(null)
     }
@@ -41,7 +41,7 @@ export async function addZeroPaddingToIds(filteredColumn: any) {
   const zeroPaddedColumn = filteredColumn.map((item: any) => {
     const itemSplit = item.split('/')
     const newItem = [itemSplit[0].padStart(5, '0'), itemSplit[1]].join('/')
-    return newItem
+    return newItem.trim()
   })
 
   return { fileIds: zeroPaddedColumn }

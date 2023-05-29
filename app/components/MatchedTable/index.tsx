@@ -55,9 +55,9 @@ function MatchedFilesTable(props: { matchedFiles: any[] }) {
                 </div>
 
                 <div>
-                  {searchResults.map(file => (
+                  {searchResults.map((file, index) => (
                     <div
-                      key={file[1]}
+                      key={index}
                       className='flex py-2 lg:py-4 items-center justify-between  border-b border-gray-300'
                     >
                       <p className='flex-1 text-center text-sm lg:text-base text-gray-500'>
