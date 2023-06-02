@@ -5,44 +5,53 @@ export async function fileUpload(file: any) {
 
   // Assuming the file buffer is in the variable 'buffer'
   const workbook = xlsx.read(new Uint8Array(fileBuffer), { type: 'array' })
-  const sheet = workbook.Sheets[workbook.SheetNames[0]]
+  const workingSheet = workbook.Sheets[workbook.SheetNames[0]]
 
-  return sheet
+  return workingSheet
 }
 
-export async function getFileIdsColumn(sheet: any) {
-  // Get the file ID column
-  const range = xlsx.utils.decode_range(sheet['!ref'])
-  const column = []
-  for (let i = range.s.r; i <= range.e.r; i++) {
-    const cell = sheet[xlsx.utils.encode_cell({ r: i, c: 1 })] // Change the second argument to the index of the column you want to read (0-indexed)
-    if (cell && cell.t === 's') {
-      column.push(cell.v.trim()) // Clean the ID before adding to the array
-    } else {
-      column.push(null)
+export async function getExcelColumns(workingSheet: any) {
+
+  // Transform the sheet to JSON data and get the first and second row
+  const excelColumns = xlsx.utils.sheet_to_json(workingSheet,
+    {
+      header: 1,
+      range: 2,
+      raw: false,
+      defval: null,
+      blankrows: false,
+      dateNF: 'yyyy-mm-dd',
     }
-  }
-  return column
+  )
+
+  return excelColumns
 }
 
-export async function filterIdColumns(column: any) {
+export async function filterColumns(excelColumns: any) {
   // Filter empty columns
   const regex = /^\d{0,5}\/\d{4}$/
-  const filteredColumn = column.filter((item: any) => {
-    const value = item
+
+  const cleanedColumns = excelColumns.map(subarray => [
+    subarray[0] && subarray[0].trim() ? subarray[0].trim().replace(/\s+/g, '') : '',
+    subarray[1] && subarray[1].trim() ? subarray[1].trim().replace(/\s+/g, '') : ''
+  ]
+  );
+
+  const filteredColumns = cleanedColumns.filter(([column1, column2]) => {
+    const value = column2
     return regex.test(value)
   })
 
-  return filteredColumn
+  return filteredColumns
 }
 
-export async function addZeroPaddingToIds(filteredColumn: any) {
+export async function addZeroPaddingToIds(filteredColumns: any) {
   // Add zero padded IDs
-  const zeroPaddedColumn = filteredColumn.map((item: any) => {
-    const itemSplit = item.split('/')
+  const zeroPaddedColumns = filteredColumns.map(([column1, column2]) => {
+    const itemSplit = column2.split('/')
     const newItem = [itemSplit[0].padStart(5, '0'), itemSplit[1]].join('/')
-    return newItem.trim()
+    return [column1, newItem.trim()]
   })
 
-  return { fileIds: zeroPaddedColumn }
+  return zeroPaddedColumns
 }
