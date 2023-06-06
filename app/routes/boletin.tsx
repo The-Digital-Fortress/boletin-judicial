@@ -199,16 +199,17 @@ export const action: ActionFunction = async ({ request }) => {
   )
 
   const myJuzgadoMap = {
-    "1civil": "JUZGADO PRIMERO",
-    "2civil": "JUZGADO SEGUNDO",
-    "3civil": "JUZGADO TERCERO",
-    "4civil": "JUZGADO CUARTO",
-    "5civil": "JUZGADO QUINTO",
-    "6civil": "JUZGADO SEXTO",
-    "7civil": "JUZGADO SEPTIMO",
-    "8civil": "JUZGADO OCTAVO",
-    "9civil": "JUZGADO NOVENO",
-    "10civil": "JUZGADO DECIMO",
+    "1civil": "JUZGADO PRIMERO CIVIL",
+    "2civil": "JUZGADO SEGUNDO CIVIL",
+    "3civil": "JUZGADO TERCERO CIVIL",
+    "4civil": "JUZGADO CUARTO CIVIL",
+    "5civil": "JUZGADO QUINTO CIVIL",
+    "6civil": "JUZGADO SEXTO CIVIL",
+    "7civil": "JUZGADO SEPTIMO CIVIL",
+    "8civil": "JUZGADO OCTAVO CIVIL",
+    "9civil": "JUZGADO NOVENO CIVIL",
+    "10civil": "JUZGADO DECIMO CIVIL",
+    "11civil": "JUZGADO DECIMO PRIMERO CIVIL",
     "1familiar": "JUZGADO PRIMERO DE LO FAMILIAR",
     "2familiar": "JUZGADO SEGUNDO DE LO FAMILIAR",
     "3familiar": "JUZGADO TERCERO DE LO FAMILIAR",
@@ -219,6 +220,7 @@ export const action: ActionFunction = async ({ request }) => {
     "8familiar": "JUZGADO OCTAVO DE LO FAMILIAR",
     "9familiar": "JUZGADO NOVENO DE LO FAMILIAR",
     "10familiar": "JUZGADO DECIMO DE LO FAMILIAR",
+    "11familiar": "JUZGADO DECIMO PRIMERO DE LO FAMILIAR",
   }
 
   const excelJuzgadosConverted = paddedIds.map(subarray => [
@@ -226,10 +228,10 @@ export const action: ActionFunction = async ({ request }) => {
     subarray[1]
   ]);
 
-  // console.log("idsColumns:", idsColumns)
-  // console.log("filteredIds:", filteredIds)
-  // console.log("paddedIds:", paddedIds)
-  // console.log("excelJuzgadosConverted:", excelJuzgadosConverted)
+  // console.log("idsColumns:", idsColumns.slice(-10))
+  // console.log("filteredIds:", filteredIds.slice(-10))
+  // console.log("paddedIds:", paddedIds.slice(-10))
+  // console.log("excelJuzgadosConverted:", excelJuzgadosConverted.slice(-10))
 
   if (boletinData.status === 204) {
     return json({
@@ -241,7 +243,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (boletinData.status === 200) {
     boletinData.files.forEach(jury => {
       jury?.files.forEach((file, index) => {
-        console.log("file1:", file[1], " jury key:", jury.key)
+        // console.log("file1:", file[1], " jury key:", jury.key)
         const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
         )
         if (fileExists)
