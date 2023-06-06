@@ -40,9 +40,6 @@ function MatchedFilesTable(props: { matchedFiles: any[] }) {
             <div className='overflow-scroll'>
               <div className='mt-4 lg:mt-4 mx-auto min-w-[800px] max-w-7xl lg:px-8'>
                 <div className='flex items-center border-b-2 justify-between border-gray-300 '>
-                  <p className='text-center font-semibold  text-sm lg:text-lg flex-1 '>
-                    Numero de archivo
-                  </p>
                   <p className='text-center font-semibold text-sm lg:text-lg flex-[2_2_0] '>
                     Expediente
                   </p>
@@ -60,14 +57,11 @@ function MatchedFilesTable(props: { matchedFiles: any[] }) {
                       key={index}
                       className='flex py-2 lg:py-4 items-center justify-between  border-b border-gray-300'
                     >
-                      <p className='flex-1 text-center text-sm lg:text-base text-gray-500'>
-                        {file[0]}
+                      <p className='flex-[3_3_0] text-center text-sm lg:text-base text-gray-500'>
+                        {file[3]}
                       </p>
                       <p className='flex-[2_2_0] text-center text-sm lg:text-base'>
                         {file[1]}
-                      </p>
-                      <p className='flex-[3_3_0] text-center text-sm lg:text-base text-gray-500'>
-                        {file[3]}
                       </p>
                       <p className='flex-[5_5_0] text-center text-sm lg:text-base text-gray-500'>
                         {file[2]}

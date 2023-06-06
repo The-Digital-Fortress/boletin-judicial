@@ -9,8 +9,8 @@ import { getBoletinData } from 'functions/boletin'
 import {
   addZeroPaddingToIds,
   fileUpload,
-  filterIdColumns,
-  getFileIdsColumn,
+  filterColumns,
+  getExcelColumns,
 } from 'functions/file-management'
 import MatchedFilesTable from '~/components/MatchedTable'
 import Navbar from '~/components/Navbar'
@@ -140,10 +140,18 @@ const Boletin = () => {
         </div>
       ) : (
         <>
+          {actionData?.data?.matchedFiles?.length === 0 && (
+            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+              <span className='text-indigo-400 font-semibold'>
+                No se encontraron coincidencias entre el archivo y el boletin!
+              </span>
+            </div>
+          )}
           <MatchedFilesTable matchedFiles={actionData?.data?.matchedFiles} />
           {/* <UnmatchedFilesTable
             unmatchedFiles={actionData?.data?.unmatchedFiles}
           /> */}
+
         </>
       )}
 
@@ -180,8 +188,8 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
   const fileSheet = await fileUpload(file)
-  const idsColumn = await getFileIdsColumn(fileSheet)
-  const filteredIds = await filterIdColumns(idsColumn)
+  const idsColumns = await getExcelColumns(fileSheet)
+  const filteredIds = await filterColumns(idsColumns)
   const paddedIds = await addZeroPaddingToIds(filteredIds)
   const matchedFiles: any = []
   const unmatchedFiles: any = []
@@ -190,20 +198,58 @@ export const action: ActionFunction = async ({ request }) => {
     municipalityMap[municipality || '']
   )
 
-  if (boletinData.status === 204)
+  const myJuzgadoMap = {
+    "1civil": "JUZGADO PRIMERO",
+    "2civil": "JUZGADO SEGUNDO",
+    "3civil": "JUZGADO TERCERO",
+    "4civil": "JUZGADO CUARTO",
+    "5civil": "JUZGADO QUINTO",
+    "6civil": "JUZGADO SEXTO",
+    "7civil": "JUZGADO SEPTIMO",
+    "8civil": "JUZGADO OCTAVO",
+    "9civil": "JUZGADO NOVENO",
+    "10civil": "JUZGADO DECIMO",
+    "1familiar": "JUZGADO PRIMERO DE LO FAMILIAR",
+    "2familiar": "JUZGADO SEGUNDO DE LO FAMILIAR",
+    "3familiar": "JUZGADO TERCERO DE LO FAMILIAR",
+    "4familiar": "JUZGADO CUARTO DE LO FAMILIAR",
+    "5familiar": "JUZGADO QUINTO DE LO FAMILIAR",
+    "6familiar": "JUZGADO SEXTO DE LO FAMILIAR",
+    "7familiar": "JUZGADO SEPTIMO DE LO FAMILIAR",
+    "8familiar": "JUZGADO OCTAVO DE LO FAMILIAR",
+    "9familiar": "JUZGADO NOVENO DE LO FAMILIAR",
+    "10familiar": "JUZGADO DECIMO DE LO FAMILIAR",
+  }
+
+  const excelJuzgadosConverted = paddedIds.map(subarray => [
+    subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()] || subarray[0],
+    subarray[1]
+  ]);
+
+  // console.log("idsColumns:", idsColumns)
+  // console.log("filteredIds:", filteredIds)
+  // console.log("paddedIds:", paddedIds)
+  // console.log("excelJuzgadosConverted:", excelJuzgadosConverted)
+
+  if (boletinData.status === 204) {
     return json({
       status: 204,
       message: boletinData.data.message,
     })
+  }
 
-  if (boletinData.status === 200)
-    boletinData?.files?.forEach(jury => {
-      jury?.files.forEach(file => {
-        if (paddedIds.fileIds.includes(file[1]))
+  if (boletinData.status === 200) {
+    boletinData.files.forEach(jury => {
+      jury?.files.forEach((file, index) => {
+        console.log("file1:", file[1], " jury key:", jury.key)
+        const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
+        )
+        if (fileExists)
           matchedFiles.push({ '3': jury?.key, ...file })
         else unmatchedFiles.push({ '3': jury?.key, ...file })
       })
     })
+  }
 
   return json({
     status: 200,
