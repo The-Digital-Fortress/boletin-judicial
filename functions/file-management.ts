@@ -16,7 +16,7 @@ export async function getExcelColumns(workingSheet: any) {
   const excelColumns = xlsx.utils.sheet_to_json(workingSheet,
     {
       header: 1,
-      range: 2,
+      range: 0,
       raw: false,
       defval: null,
       blankrows: false,
