@@ -1,4 +1,3 @@
-import type { LinksFunction } from '@remix-run/node'
 import { useState } from 'react'
 import { json } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
@@ -6,12 +5,7 @@ import Datepicker from 'react-tailwindcss-datepicker'
 import type { ActionFunction } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { getBoletinData } from 'functions/boletin'
-import {
-  addZeroPaddingToIds,
-  fileUpload,
-  filterColumns,
-  getExcelColumns,
-} from 'functions/file-management'
+import { addZeroPaddingToIds, fileUpload, filterColumns, getExcelColumns } from 'functions/file-management'
 import MatchedFilesTable from '~/components/MatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
@@ -79,7 +73,8 @@ const Boletin = () => {
           )}
 
           <div className='w-full lg:max-w-[200px]'>
-            <Datepicker
+            {/* <Datepicker
+              inputId='date-picker'
               placeholder='Seleccionar fecha'
               inputClassName='py-[.5rem] px-[.75rem] w-full  rounded-md focus:ring-0  border-2 border-indigo-600  placeholder:text-indigo-400 text-indigo-600 font-semibold'
               primaryColor={'indigo'}
@@ -87,41 +82,23 @@ const Boletin = () => {
               useRange={false}
               value={date}
               onChange={handleDateChange}
-            />
+            /> */}
           </div>
 
-          <input
-            readOnly
-            type='date'
-            name='date-picker'
-            id='date-picker'
-            value={date.startDate}
-            className='hidden'
-          />
+          <input readOnly type='date' name='date-picker' id='date-picker' value={date.startDate} className='hidden' />
 
           <Dropdown setMunicipality={setMunicipality} />
 
-          <input
-            type='text'
-            name='municipality'
-            id='municipality'
-            value={municipality}
-            className='hidden'
-            readOnly
-          />
+          <input type='text' name='municipality' id='municipality' value={municipality} className='hidden' readOnly />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
-            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>
-              Subir archivo →
-            </button>
+            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>Subir archivo →</button>
           </label>
         </Form>
 
         {actionData?.url && (
           <div className='flex flex-col gap-2'>
-            <span className='font-semibold leading-6 text-indigo-400'>
-              Boletin comparado
-            </span>
+            <span className='font-semibold leading-6 text-indigo-400'>Boletin comparado</span>
 
             <Link
               to={actionData.url}
@@ -151,7 +128,6 @@ const Boletin = () => {
           {/* <UnmatchedFilesTable
             unmatchedFiles={actionData?.data?.unmatchedFiles}
           /> */}
-
         </>
       )}
 
@@ -181,11 +157,9 @@ export const action: ActionFunction = async ({ request }) => {
     Tecate: 'te',
   }
 
-  if (!file)
-    return json({ status: 400, message: 'Es necesario subir un archivo' })
+  if (!file) return json({ status: 400, message: 'Es necesario subir un archivo' })
 
-  if (!date)
-    return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
+  if (!date) return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
   const fileSheet = await fileUpload(file)
   const idsColumns = await getExcelColumns(fileSheet)
@@ -193,40 +167,37 @@ export const action: ActionFunction = async ({ request }) => {
   const paddedIds = await addZeroPaddingToIds(filteredIds)
   const matchedFiles: any = []
   const unmatchedFiles: any = []
-  const boletinData = await getBoletinData(
-    date,
-    municipalityMap[municipality || '']
-  )
+  const boletinData = await getBoletinData(date, municipalityMap[municipality || ''])
 
   const myJuzgadoMap = {
-    "1civil": "JUZGADO PRIMERO CIVIL",
-    "2civil": "JUZGADO SEGUNDO CIVIL",
-    "3civil": "JUZGADO TERCERO CIVIL",
-    "4civil": "JUZGADO CUARTO CIVIL",
-    "5civil": "JUZGADO QUINTO CIVIL",
-    "6civil": "JUZGADO SEXTO CIVIL",
-    "7civil": "JUZGADO SEPTIMO CIVIL",
-    "8civil": "JUZGADO OCTAVO CIVIL",
-    "9civil": "JUZGADO NOVENO CIVIL",
-    "10civil": "JUZGADO DECIMO CIVIL",
-    "11civil": "JUZGADO DECIMO PRIMERO CIVIL",
-    "1familiar": "JUZGADO PRIMERO DE LO FAMILIAR",
-    "2familiar": "JUZGADO SEGUNDO DE LO FAMILIAR",
-    "3familiar": "JUZGADO TERCERO DE LO FAMILIAR",
-    "4familiar": "JUZGADO CUARTO DE LO FAMILIAR",
-    "5familiar": "JUZGADO QUINTO DE LO FAMILIAR",
-    "6familiar": "JUZGADO SEXTO DE LO FAMILIAR",
-    "7familiar": "JUZGADO SEPTIMO DE LO FAMILIAR",
-    "8familiar": "JUZGADO OCTAVO DE LO FAMILIAR",
-    "9familiar": "JUZGADO NOVENO DE LO FAMILIAR",
-    "10familiar": "JUZGADO DECIMO DE LO FAMILIAR",
-    "11familiar": "JUZGADO DECIMO PRIMERO DE LO FAMILIAR",
+    '1civil': 'JUZGADO PRIMERO CIVIL',
+    '2civil': 'JUZGADO SEGUNDO CIVIL',
+    '3civil': 'JUZGADO TERCERO CIVIL',
+    '4civil': 'JUZGADO CUARTO CIVIL',
+    '5civil': 'JUZGADO QUINTO CIVIL',
+    '6civil': 'JUZGADO SEXTO CIVIL',
+    '7civil': 'JUZGADO SEPTIMO CIVIL',
+    '8civil': 'JUZGADO OCTAVO CIVIL',
+    '9civil': 'JUZGADO NOVENO CIVIL',
+    '10civil': 'JUZGADO DECIMO CIVIL',
+    '11civil': 'JUZGADO DECIMO PRIMERO CIVIL',
+    '1familiar': 'JUZGADO PRIMERO DE LO FAMILIAR',
+    '2familiar': 'JUZGADO SEGUNDO DE LO FAMILIAR',
+    '3familiar': 'JUZGADO TERCERO DE LO FAMILIAR',
+    '4familiar': 'JUZGADO CUARTO DE LO FAMILIAR',
+    '5familiar': 'JUZGADO QUINTO DE LO FAMILIAR',
+    '6familiar': 'JUZGADO SEXTO DE LO FAMILIAR',
+    '7familiar': 'JUZGADO SEPTIMO DE LO FAMILIAR',
+    '8familiar': 'JUZGADO OCTAVO DE LO FAMILIAR',
+    '9familiar': 'JUZGADO NOVENO DE LO FAMILIAR',
+    '10familiar': 'JUZGADO DECIMO DE LO FAMILIAR',
+    '11familiar': 'JUZGADO DECIMO PRIMERO DE LO FAMILIAR',
   }
 
   const excelJuzgadosConverted = paddedIds.map(subarray => [
-    subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()] || subarray[0],
-    subarray[1]
-  ]);
+    (subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()]) || subarray[0],
+    subarray[1],
+  ])
 
   // console.log("idsColumns:", idsColumns.slice(-10))
   // console.log("filteredIds:", filteredIds.slice(-10))
@@ -244,10 +215,10 @@ export const action: ActionFunction = async ({ request }) => {
     boletinData.files.forEach(jury => {
       jury?.files.forEach((file, index) => {
         // console.log("file1:", file[1], " jury key:", jury.key)
-        const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
+        const fileExists = excelJuzgadosConverted.some(
+          ([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
         )
-        if (fileExists)
-          matchedFiles.push({ '3': jury?.key, ...file })
+        if (fileExists) matchedFiles.push({ '3': jury?.key, ...file })
         else unmatchedFiles.push({ '3': jury?.key, ...file })
       })
     })
