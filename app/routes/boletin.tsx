@@ -5,18 +5,12 @@ import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
 import type { ActionFunction } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
-import { getBoletinData } from 'functions/boletin'
-import {
-  addZeroPaddingToIds,
-  fileUpload,
-  filterColumns,
-  getExcelColumns,
-} from 'functions/file-management'
 import MatchedFilesTable from '~/components/MatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
+import {  BASE_URL_V1, BASE_URL_V2 } from './api'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
@@ -33,7 +27,6 @@ const Boletin = () => {
     startDate: today,
     endDate: today,
   })
-
   const transition = useNavigation()
   const actionData = useActionData()
 
@@ -169,12 +162,13 @@ export default Boletin
 
 export const action: ActionFunction = async ({ request }) => {
   const body = await request.formData()
-
   const file = body.get('file')
   const date = body.get('date-picker')
   const municipality = body.get('municipality')
+  let paddedIds: any = []
+  let boletinData: any = []
 
-  const municipalityMap = {
+  const municipalityMap: Record<string, string> = {
     Tijuana: 'ti',
     Mexicali: 'me',
     Ensenada: 'en',
@@ -187,18 +181,51 @@ export const action: ActionFunction = async ({ request }) => {
   if (!date)
     return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
-  const fileSheet = await fileUpload(file)
-  const idsColumns = await getExcelColumns(fileSheet)
-  const filteredIds = await filterColumns(idsColumns)
-  const paddedIds = await addZeroPaddingToIds(filteredIds)
+  const formData = new FormData();
+  formData.append('xlsxFile', file);
+
   const matchedFiles: any = []
   const unmatchedFiles: any = []
-  const boletinData = await getBoletinData(
-    date,
-    municipalityMap[municipality || '']
-  )
 
-  const myJuzgadoMap = {
+  // File upload request
+  try{
+    const fileUploadRequest = await fetch(`${BASE_URL_V1}/file`, {
+      headers: {
+        'access-control-allow-origin': '*', // CORS
+      },
+      method: 'POST',
+      body: formData,
+    });
+    const fileUploadResponse = await fileUploadRequest.json();
+    paddedIds = JSON.parse(JSON.stringify(fileUploadResponse));
+    console.log("paddedIds:", paddedIds)
+  } catch (error) {
+    console.log("error:", error)
+  }
+
+
+  // Boletin request
+  const city = municipalityMap[municipality || ''];
+  const queryParams = new URLSearchParams();
+  queryParams.append('date', date.toString());
+  queryParams.append('city', city);
+
+  try{
+  const boletinRequest = await fetch(`${BASE_URL_V1}/boletin?${queryParams.toString()}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'access-control-allow-origin': '*', // CORS
+    },
+    method: 'GET',
+  });
+  const boletinResponse = await boletinRequest.json();
+  boletinData = JSON.parse(JSON.stringify(boletinResponse));
+  console.log("boletinData:", boletinData)
+} catch (error) {
+    console.log("error:", error)
+  }
+
+  const myJuzgadoMap: Record<string, string> = {
     "1civil": "JUZGADO PRIMERO CIVIL",
     "2civil": "JUZGADO SEGUNDO CIVIL",
     "3civil": "JUZGADO TERCERO CIVIL",
@@ -223,25 +250,20 @@ export const action: ActionFunction = async ({ request }) => {
     "11familiar": "JUZGADO DECIMO PRIMERO DE LO FAMILIAR",
   }
 
-  const excelJuzgadosConverted = paddedIds.map(subarray => [
+  const excelJuzgadosConverted = paddedIds.data.zeroPaddedColumns.map(subarray => [
     subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()] || subarray[0],
     subarray[1]
   ]);
 
-  // console.log("idsColumns:", idsColumns.slice(-10))
-  // console.log("filteredIds:", filteredIds.slice(-10))
-  // console.log("paddedIds:", paddedIds.slice(-10))
-  // console.log("excelJuzgadosConverted:", excelJuzgadosConverted.slice(-10))
-
-  if (boletinData.status === 204) {
+  if (boletinData['status'] !== 200) {
     return json({
-      status: 204,
-      message: boletinData.data.message,
+      status: boletinData.status,
+      message: boletinData.errors,
     })
   }
 
-  if (boletinData.status === 200) {
-    boletinData.files.forEach(jury => {
+  if (boletinData['status'] === 200) {
+    boletinData.data.boletinData.forEach(jury => {
       jury?.files.forEach((file, index) => {
         // console.log("file1:", file[1], " jury key:", jury.key)
         const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
@@ -254,8 +276,10 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   return json({
-    status: 200,
+    status: boletinData.status,
     data: { matchedFiles, unmatchedFiles },
     url: boletinData.url,
   })
 }
+
+
