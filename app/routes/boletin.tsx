@@ -1,20 +1,62 @@
-import type { LinksFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { useState } from 'react'
-import { json } from '@remix-run/node'
+import { json , redirect } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
-import type { ActionFunction } from '@remix-run/node'
-import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
+import { Form, Link, useActionData, useNavigation, useLoaderData } from '@remix-run/react'
 import MatchedFilesTable from '~/components/MatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 import {  BASE_URL_V1, BASE_URL_V2 } from './api'
+import { session } from "~/cookies";
+import { auth as serverAuth } from "~/firebase.server";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
 }
+
+export const loader: LoaderFunction = async ({ request }) => {
+  // Get the cookie value (JWT)
+  const jwt = await session.parse(request.headers.get("Cookie"));
+
+  // No JWT found...
+  if (!jwt) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url);
+    const expires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`;
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": cookie,
+      },
+    });
+  }
+
+  // Verify the JWT is valid
+  const decoded = await serverAuth.verifySessionCookie(jwt);
+
+  // No valid JWT found...
+  if (!decoded) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url);
+    const expires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`;
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": cookie,
+      },
+    });
+  }
+
+  // Return user from jwt
+  const user = await serverAuth.getUser(decoded.uid);
+
+  // Return the user
+  return user;
+
+};
 
 const BulletListLoader = () => <BulletList />
 
@@ -126,7 +168,6 @@ const Boletin = () => {
           </div>
         )}
       </div>
-
       {transition.state === 'submitting' ? (
         <div className='mx-auto max-w-7xl px-2 lg:px-8'>
           <BulletListLoader />
@@ -198,7 +239,6 @@ export const action: ActionFunction = async ({ request }) => {
     });
     const fileUploadResponse = await fileUploadRequest.json();
     paddedIds = JSON.parse(JSON.stringify(fileUploadResponse));
-    console.log("paddedIds:", paddedIds)
   } catch (error) {
     console.log("error:", error)
   }
@@ -220,7 +260,6 @@ export const action: ActionFunction = async ({ request }) => {
   });
   const boletinResponse = await boletinRequest.json();
   boletinData = JSON.parse(JSON.stringify(boletinResponse));
-  console.log("boletinData:", boletinData)
 } catch (error) {
     console.log("error:", error)
   }
