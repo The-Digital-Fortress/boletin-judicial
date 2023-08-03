@@ -3,7 +3,7 @@ import coverImage from '~/assets/coverImage.jpg'
 
 export default function Hero() {
   return (
-    <div className='flex flex-col max-w-7xl mx-auto relative'>
+    <div className='flex flex-col max-w-7xl mx-auto relative select-none'>
       <div className='flex flex-row sm:flex-nowrap md:flex-nowrap lg:flex-nowrap flex-wrap-reverse mt-10 relative z-2'>
         <div className='flex flex-col items-center lg:items-start justify-center gap-8 px-5 pb-5'>
           <h1 className='text-3xl sm:text-6xl md:text-6xl lg:text-6xl text-gray-800 font-semibold tracking-tight'>
@@ -24,7 +24,7 @@ export default function Hero() {
         </div>
         <div className='flex mb-5 px-20 py-0 sm:py-20 md:py-20 lg:py-0'>
           <img
-            className='rounded-full object-cover'
+            className='rounded-full object-cover pointer-events-none'
             src={coverImage}
             alt='hero'
           />
