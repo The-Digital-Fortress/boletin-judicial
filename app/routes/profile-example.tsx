@@ -47,7 +47,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 };
 
-export default function Profile() {
+export default function ProfileExample() {
   // Get the user from the loader
   const profile = useLoaderData<typeof loader>();
   return (
