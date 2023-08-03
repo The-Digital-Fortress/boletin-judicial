@@ -7,8 +7,9 @@ import type { ActionFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node'
 import { auth as serverAuth } from "~/firebase.server";
 import { useFetcher } from '@remix-run/react'
-import { session } from '~/cookies'
+import { session } from '~/cookies.server'
 import GoogleLogin from '~/components/GoogleLogin'
+import Navbar from "~/components/Navbar";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -55,6 +56,9 @@ export default function Login({ location }: { location: string }) {
   }
 
   return (
-    <GoogleLogin handleClick={handleSubmit} />
+    <div className="flex flex-col min-h-screen">
+      <Navbar user={null}/>
+      <GoogleLogin handleClick={handleSubmit} />
+    </div>
   )
 }

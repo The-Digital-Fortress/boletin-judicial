@@ -2,7 +2,7 @@
 
 import type { LoaderFunction} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { session } from "~/cookies";
+import { session } from "~/cookies.server";
 import { auth as serverAuth } from "~/firebase.server";
 import { useLoaderData } from "@remix-run/react";
 

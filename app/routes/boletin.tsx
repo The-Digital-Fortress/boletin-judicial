@@ -10,7 +10,7 @@ import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 import {  BASE_URL_V1, BASE_URL_V2 } from './api'
-import { session } from "~/cookies";
+import { session } from "~/cookies.server";
 import { auth as serverAuth } from "~/firebase.server";
 
 export const meta: V2_MetaFunction = () => {
@@ -61,6 +61,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
+  const user = useLoaderData();
   const [fileName, setFileName] = useState('')
   const [municipality, setMunicipality] = useState('Tijuana')
   const now = moment().tz('America/Los_Angeles')
@@ -83,7 +84,7 @@ const Boletin = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar user={user}/>
       <div className='mx-auto mt-4 lg:mt-16 px-2 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
         <Form
           action='/boletin'
