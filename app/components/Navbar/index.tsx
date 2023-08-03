@@ -4,10 +4,11 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { UserIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from '~/assets/logo.png'
+import { NavLink } from 'react-router-dom'
 
 const navigation = [
-  { name: 'Inicio', href: '/', current: false },
-  { name: 'Boletin', href: '/boletin', current: false },
+  { name: 'Inicio', href: '/' },
+  { name: 'Boletin', href: '/boletin' },
 ]
 
 function classNames(...classes: string[]) {
@@ -15,6 +16,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar( { user } ) {
+
   return (
     <Disclosure as='nav' className='bg-gray-800'>
       {({ open }) => (
@@ -47,20 +49,16 @@ export default function Navbar( { user } ) {
                 </div>
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
-                    {navigation.map(item => (
-                      <a
+                    {navigation.map((item, index) => (
+                      <NavLink
                         key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
+                        to={item.href}
+                        className={({isActive}) => {
+                          return isActive ? 'border-indigo-600 bg-indigo-600 text-white rounded-md px-3 py-2 text-sm font-medium' : 'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium'
+                        } }
                       >
                         {item.name}
-                      </a>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
@@ -97,43 +95,43 @@ export default function Navbar( { user } ) {
                         <>
                         <Menu.Item>
                           {({ active }) => (
-                            <a
-                              href='#'
+                            <NavLink
+                              to='#'
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
                                 'block px-4 py-2 text-sm text-gray-700'
                               )}
                             >
                               Mi perfil
-                            </a>
+                            </NavLink>
                           )}
                         </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
-                            <a
-                              href='/logout'
+                            <NavLink
+                              to='/logout'
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
                                 'block px-4 py-2 text-sm text-gray-700'
                               )}
                             >
                               Salir
-                            </a>
+                            </NavLink>
                           )}
                         </Menu.Item>
                         </>
                       ) : (
                         <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href='/login'
+                          <NavLink
+                            to='/login'
                             className={classNames(
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700'
                             )}
                           >
                             Iniciar sesión
-                          </a>
+                          </NavLink>
                         )}
                       </Menu.Item>
                       )}

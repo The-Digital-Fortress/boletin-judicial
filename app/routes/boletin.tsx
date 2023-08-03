@@ -175,7 +175,15 @@ const Boletin = () => {
         </div>
       ) : (
         <>
-          {actionData?.data?.matchedFiles?.length === 0 && (
+          {console.log("actionData:", actionData)}
+          {actionData?.status === 400 && (
+            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+              <span className='text-indigo-400 font-semibold'>
+                No se encontro boletin para la fecha seleccionada!
+              </span>
+            </div>
+          )}
+          {actionData?.status === 200 && actionData?.data?.matchedFiles?.length === 0 && (
             <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
               <span className='text-indigo-400 font-semibold'>
                 No se encontraron coincidencias entre el archivo y el boletin!
