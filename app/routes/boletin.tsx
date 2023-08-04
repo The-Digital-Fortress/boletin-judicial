@@ -252,7 +252,6 @@ export const action: ActionFunction = async ({ request }) => {
     console.log("error:", error)
   }
 
-
   // Boletin request
   const city = municipalityMap[municipality || ''];
   const queryParams = new URLSearchParams();
