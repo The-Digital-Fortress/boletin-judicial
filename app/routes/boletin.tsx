@@ -12,6 +12,7 @@ import moment from 'moment-timezone'
 import {  BASE_URL_V1, BASE_URL_V2 } from './api'
 import { session } from "~/cookies.server";
 import { auth as serverAuth } from "~/firebase.server";
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
@@ -78,10 +79,17 @@ const Boletin = () => {
     setFileName(file.name)
   }
 
-  const handleDateChange = (date: any) => {
-    setDate(date)
-  }
+  const handleFileClear = () => {
+    setFileName('');
+  };
 
+  const handleDateChange = (date: any) => {
+    setDate({
+        startDate: date.startDate,
+        endDate: date.endDate,
+      })
+  }
+    
   return (
     <div>
       <Navbar user={user}/>
@@ -109,9 +117,12 @@ const Boletin = () => {
           />
 
           {fileName && (
-            <p className='w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-              {fileName}
-            </p>
+            <div className='flex flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 whitespace-nowrap'>
+              <p>
+                {fileName}
+              </p>
+              <XMarkIcon onClick={handleFileClear} className='w-5 h-5 text-gray-400 cursor-pointer ml-2' />
+          </div>
           )}
 
           <div className='w-full lg:max-w-[200px]'>
@@ -175,14 +186,21 @@ const Boletin = () => {
         </div>
       ) : (
         <>
-          {console.log("actionData:", actionData)}
-          {actionData?.status === 400 && (
-            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+          { actionData?.status === 400 && (
+            actionData?.message[0] === "No main section found" ? (<div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
               <span className='text-indigo-400 font-semibold'>
                 No se encontro boletin para la fecha seleccionada!
               </span>
             </div>
+          ) : (
+            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+              <span className='text-indigo-400 font-semibold'>
+                {actionData?.message}
+              </span>
+            </div>
+          )
           )}
+          
           {actionData?.status === 200 && actionData?.data?.matchedFiles?.length === 0 && (
             <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
               <span className='text-indigo-400 font-semibold'>
