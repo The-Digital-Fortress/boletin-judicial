@@ -1,24 +1,68 @@
-import type { LinksFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { useState } from 'react'
-import { json } from '@remix-run/node'
+import { json , redirect } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
-import type { ActionFunction } from '@remix-run/node'
-import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
+import { Form, Link, useActionData, useNavigation, useLoaderData } from '@remix-run/react'
 import MatchedFilesTable from '~/components/MatchedTable'
 import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 import {  BASE_URL_V1, BASE_URL_V2 } from './api'
+import { session } from "~/cookies.server";
+import { auth as serverAuth } from "~/firebase.server";
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
 }
 
+export const loader: LoaderFunction = async ({ request }) => {
+  // Get the cookie value (JWT)
+  const jwt = await session.parse(request.headers.get("Cookie"));
+
+  // No JWT found...
+  if (!jwt) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url);
+    const expires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`;
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": cookie,
+      },
+    });
+  }
+
+  // Verify the JWT is valid
+  const decoded = await serverAuth.verifySessionCookie(jwt);
+
+  // No valid JWT found...
+  if (!decoded) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url);
+    const expires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`;
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": cookie,
+      },
+    });
+  }
+
+  // Return user from jwt
+  const user = await serverAuth.getUser(decoded.uid);
+
+  // Return the user
+  return user;
+
+};
+
 const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
+  const user = useLoaderData();
   const [fileName, setFileName] = useState('')
   const [municipality, setMunicipality] = useState('Tijuana')
   const now = moment().tz('America/Los_Angeles')
@@ -35,13 +79,20 @@ const Boletin = () => {
     setFileName(file.name)
   }
 
-  const handleDateChange = (date: any) => {
-    setDate(date)
-  }
+  const handleFileClear = () => {
+    setFileName('');
+  };
 
+  const handleDateChange = (date: any) => {
+    setDate({
+        startDate: date.startDate,
+        endDate: date.endDate,
+      })
+  }
+    
   return (
     <div>
-      <Navbar />
+      <Navbar user={user}/>
       <div className='mx-auto mt-4 lg:mt-16 px-2 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
         <Form
           action='/boletin'
@@ -66,9 +117,12 @@ const Boletin = () => {
           />
 
           {fileName && (
-            <p className='w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-              {fileName}
-            </p>
+            <div className='flex flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 whitespace-nowrap'>
+              <p>
+                {fileName}
+              </p>
+              <XMarkIcon onClick={handleFileClear} className='w-5 h-5 text-gray-400 cursor-pointer ml-2' />
+          </div>
           )}
 
           <div className='w-full lg:max-w-[200px]'>
@@ -126,14 +180,28 @@ const Boletin = () => {
           </div>
         )}
       </div>
-
       {transition.state === 'submitting' ? (
         <div className='mx-auto max-w-7xl px-2 lg:px-8'>
           <BulletListLoader />
         </div>
       ) : (
         <>
-          {actionData?.data?.matchedFiles?.length === 0 && (
+          { actionData?.status === 400 && (
+            actionData?.message[0] === "No main section found" ? (<div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+              <span className='text-indigo-400 font-semibold'>
+                No se encontro boletin para la fecha seleccionada!
+              </span>
+            </div>
+          ) : (
+            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+              <span className='text-indigo-400 font-semibold'>
+                {actionData?.message}
+              </span>
+            </div>
+          )
+          )}
+          
+          {actionData?.status === 200 && actionData?.data?.matchedFiles?.length === 0 && (
             <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
               <span className='text-indigo-400 font-semibold'>
                 No se encontraron coincidencias entre el archivo y el boletin!
@@ -198,11 +266,9 @@ export const action: ActionFunction = async ({ request }) => {
     });
     const fileUploadResponse = await fileUploadRequest.json();
     paddedIds = JSON.parse(JSON.stringify(fileUploadResponse));
-    console.log("paddedIds:", paddedIds)
   } catch (error) {
     console.log("error:", error)
   }
-
 
   // Boletin request
   const city = municipalityMap[municipality || ''];
@@ -220,7 +286,6 @@ export const action: ActionFunction = async ({ request }) => {
   });
   const boletinResponse = await boletinRequest.json();
   boletinData = JSON.parse(JSON.stringify(boletinResponse));
-  console.log("boletinData:", boletinData)
 } catch (error) {
     console.log("error:", error)
   }
