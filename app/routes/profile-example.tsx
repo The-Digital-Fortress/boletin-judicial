@@ -3,7 +3,7 @@
 import type { LoaderFunction} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { session } from "~/cookies.server";
-import { auth as serverAuth } from "~/firebase.server";
+import { auth as serverAuth, db as serverDb } from "~/firebase.server";
 import { useLoaderData } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -41,7 +41,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // Return user from jwt
   const user = await serverAuth.getUser(decoded.uid);
-
+  const usersRef = serverDb.collection('users');
+  const userExist = await usersRef.where('uid', '=', user.uid).limit(1).get();
+  // const snapshot = await serverDb.collection('users').get();
+  // snapshot.forEach((doc) => {
+  //   console.log(doc.id, '=>', doc.data());
+  // });
+  if (userExist.empty) {
+    console.log('No matching documents.');
+  } else {
+    userExist.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+    });
+  }
   // Return the user
   return user;
 
@@ -50,6 +62,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function ProfileExample() {
   // Get the user from the loader
   const profile = useLoaderData<typeof loader>();
+
   return (
     <div>
       <h1>Profile Test</h1>
