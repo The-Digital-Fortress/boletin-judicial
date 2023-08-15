@@ -1,4 +1,4 @@
-const people = [
+const files = [
   {
     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
     foundDate: 'Agosto 15 - Tijuana',
@@ -63,58 +63,58 @@ export default function Table() {
                 </tr>
               </thead>
               <tbody>
-                {people.map((person, personIdx) => (
-                  <tr key={person.fileTitle}>
+                {files.map((file, fileIdx) => (
+                  <tr key={file.fileTitle}>
                     <td
                       className={classNames(
-                        personIdx !== people.length - 1 ? 'border-b border-gray-200' : '',
+                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                       )}
                     >
-                      {person.fileTitle}
+                      {file.fileTitle}
                     </td>
                     <td
                       className={classNames(
-                        personIdx !== people.length - 1 ? 'border-b border-gray-200' : '',
+                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
                       <div className='flex items-center gap-3'>
                         <div
                           className={classNames(
-                            person.foundDate ? statuses.found : statuses.notFound,
+                            file.foundDate ? statuses.found : statuses.notFound,
                             'flex-none rounded-full p-1 '
                           )}
                         >
                           <div className='h-1.5 w-1.5 rounded-full bg-current' />
                         </div>
-                        <div className='hidden text-gray-500 sm:block'>{person.foundDate || 'No encontrado'}</div>
+                        <div className='hidden text-gray-500 sm:block'>{file.foundDate || 'No encontrado'}</div>
                       </div>
                     </td>
                     <td
                       className={classNames(
-                        personIdx !== people.length - 1 ? 'border-b border-gray-200' : '',
+                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
-                      {person.fileJury}
+                      {file.fileJury}
                     </td>
                     <td
                       className={classNames(
-                        personIdx !== people.length - 1 ? 'border-b border-gray-200' : '',
+                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'min-w-[300px] px-3 py-4 text-sm text-gray-500'
                       )}
                     >
-                      {person.partsName}
+                      {file.partsName}
                     </td>
                     <td
                       className={classNames(
-                        personIdx !== people.length - 1 ? 'border-b border-gray-200' : '',
+                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                       )}
                     >
                       <a href='#' className='text-indigo-600 hover:text-indigo-900'>
-                        Detalles<span className='sr-only'>, {person.fileTitle}</span>
+                        Detalles<span className='sr-only'>, {file.fileTitle}</span>
                       </a>
                     </td>
                   </tr>
