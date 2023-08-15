@@ -19,18 +19,6 @@ const SingleFileUpload = () => {
         </div>
 
         <div>
-          <label htmlFor='fileName' className='text-sm font-semibold leading-6 text-indigo-600'>
-            Nombre del archivo
-          </label>
-          <input
-            type='text'
-            id='fileName'
-            name='fileName'
-            className='flex flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-0 whitespace-nowrap'
-          />
-        </div>
-
-        <div>
           <label htmlFor='fileJury' className='text-sm font-semibold leading-6 text-indigo-600'>
             Jurado
           </label>
