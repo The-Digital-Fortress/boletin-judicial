@@ -1,3 +1,5 @@
+import { classNames } from '~/utils'
+
 const files = [
   {
     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
@@ -15,13 +17,9 @@ const files = [
   // More people...
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
-export default function Table() {
+export default function OverviewTable() {
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>

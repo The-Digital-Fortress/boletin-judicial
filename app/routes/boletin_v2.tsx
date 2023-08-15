@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import Container from '~/components/Container'
 import Tabs from '~/components/Tabs'
 import { SquaresPlusIcon, UserIcon } from '@heroicons/react/20/solid'
-import Table from '~/components/Table'
+import OverviewTable from '~/components/OverviewTable'
+import AdminTable from '~/components/AdminTable'
 
 const tabs = [
   { name: 'Resumen', href: '#', icon: SquaresPlusIcon, current: true },
@@ -34,7 +35,8 @@ const BoletinV2 = () => {
         placeholder='Buscar entre los archivos encontrados...'
       />
 
-      <Table />
+      <OverviewTable />
+      <AdminTable />
     </Container>
   )
 }
