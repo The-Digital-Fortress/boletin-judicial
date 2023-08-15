@@ -27,10 +27,10 @@ export const action: ActionFunction = async ({ request }) => {
   const decoded = await serverAuth.verifySessionCookie(jwt);
   const user = await serverAuth.getUser(decoded.uid);
   const usersRef = serverDb.collection('users');
-  const userExist = await usersRef.where('uid', '=', user.uid).limit(1).get();
-  
+  const userExist = await usersRef.where('__name__', '==', user.uid).limit(1).get();
+
   if (userExist.empty) {
-    usersRef.doc().set({
+    usersRef.doc(user.uid).set({
       uid: user.uid,
       name: user.displayName,
       email: user.email,
