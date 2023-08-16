@@ -6,8 +6,8 @@ import OverviewTable from '~/components/OverviewTable'
 import AdminTable from '~/components/AdminTable'
 
 const tabs = [
-  { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: true },
-  { name: 'Administrador de archivos', href: '/boletin_v2/administrador', icon: UserIcon, current: false },
+  { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: false },
+  { name: 'Administrador de archivos', href: '/boletin_v2/administrador', icon: UserIcon, current: true },
 ]
 
 const BoletinV2 = () => {

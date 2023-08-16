@@ -1,4 +1,5 @@
 import { classNames } from '~/utils'
+import { Link } from '@remix-run/react'
 
 type TabsProps = {
   tabs: {
@@ -32,9 +33,9 @@ export default function Tabs({ tabs }: TabsProps) {
         <div className='border-b border-gray-200'>
           <nav className='-mb-px flex space-x-8' aria-label='Tabs'>
             {tabs.map(tab => (
-              <a
+              <Link
                 key={tab.name}
-                href={tab.href}
+                to={tab.href}
                 className={classNames(
                   tab.current
                     ? 'border-indigo-500 text-indigo-600'
@@ -51,7 +52,7 @@ export default function Tabs({ tabs }: TabsProps) {
                   aria-hidden='true'
                 />
                 <span>{tab.name}</span>
-              </a>
+              </Link>
             ))}
           </nav>
         </div>
