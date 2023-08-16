@@ -12,6 +12,7 @@ import moment from 'moment-timezone'
 import { BASE_URL_V1 } from './api'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { routesLoader } from '~/loader'
+import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
 
 export { routesLoader as loader }
 

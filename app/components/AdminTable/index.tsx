@@ -12,8 +12,10 @@
   }
   ```
 */
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { classNames } from '~/utils'
+import SubmissionModal from '../SubmissionModal'
+import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
 
 const people = [
   {
@@ -42,6 +44,8 @@ export default function AdminTable() {
   const [checked, setChecked] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false)
   const [selectedPeople, setSelectedPeople] = useState([])
+  const [state, dispatch] = useReducer(adminTableReducer, initialState)
+  console.log(state)
 
   useLayoutEffect(() => {
     const isIndeterminate = selectedPeople.length > 0 && selectedPeople.length < people.length
@@ -62,6 +66,7 @@ export default function AdminTable() {
         <div className='mt-4 sm:ml-auto sm:mt-0 sm:flex-none'>
           <button
             type='button'
+            onClick={() => dispatch({ type: actionTypes.SET_MODAL_OPEN, payload: true })}
             className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
             Agregar archivo
@@ -154,6 +159,8 @@ export default function AdminTable() {
           </div>
         </div>
       </div>
+
+      <SubmissionModal state={state} dispatch={dispatch} />
     </div>
   )
 }

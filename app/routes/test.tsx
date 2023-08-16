@@ -13,14 +13,3 @@ export default function TestRoute() {
     </div>
   )
 }
-
-export const action: ActionFunction = async ({ request }) => {
-  const body = await request.formData()
-  const fileId = body.get('fileId')
-  const fileName = body.get('fileName')
-  const file = { fileId, fileName }
-
-  addFile(file)
-
-  return { fileId, fileName }
-}
