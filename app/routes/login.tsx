@@ -27,15 +27,15 @@ export const action: ActionFunction = async ({ request }) => {
   const decoded = await serverAuth.verifySessionCookie(jwt);
   const user = await serverAuth.getUser(decoded.uid);
   const usersRef = serverDb.collection('users');
-  const userExist = await usersRef.where('uid', '=', user.uid).limit(1).get();
-  
+  const userExist = await usersRef.where('__name__', '==', user.uid).limit(1).get();
+
   if (userExist.empty) {
-    usersRef.doc().set({
+    usersRef.doc(user.uid).set({
       uid: user.uid,
       name: user.displayName,
       email: user.email,
       createdOn: new Date(),
-      expirationDate: new Date(Date.now() + 60 * 60 * 24 * 5 * 1000),
+      expirationDate: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
       status: 'trial',
     });
   }

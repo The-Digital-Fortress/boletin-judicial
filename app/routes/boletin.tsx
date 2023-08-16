@@ -1,6 +1,6 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import type { ActionFunction } from '@remix-run/node'
 import { useState } from 'react'
-import { json, redirect } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
 import { Form, Link, useActionData, useNavigation, useLoaderData } from '@remix-run/react'
@@ -10,53 +10,13 @@ import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 import { BASE_URL_V1 } from './api'
-import { session } from '~/cookies.server'
-import { auth as serverAuth } from '~/firebase.server'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
+import { routesLoader } from '~/loader'
+
+export { routesLoader as loader }
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
-  // Get the cookie value (JWT)
-  const jwt = await session.parse(request.headers.get('Cookie'))
-
-  // No JWT found...
-  if (!jwt) {
-    // Set the current page's URL in a cookie in the redirect response
-    const returnUrl = encodeURIComponent(request.url)
-    const expires = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes expiration
-    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`
-    return redirect('/login', {
-      headers: {
-        'Set-Cookie': cookie,
-      },
-    })
-  }
-
-  // Verify the JWT is valid
-  const decoded = await serverAuth.verifySessionCookie(jwt)
-
-  // No valid JWT found...
-  if (!decoded) {
-    // Set the current page's URL in a cookie in the redirect response
-    const returnUrl = encodeURIComponent(request.url)
-    const expires = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes expiration
-    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`
-    return redirect('/login', {
-      headers: {
-        'Set-Cookie': cookie,
-      },
-    })
-  }
-
-  // Return user from jwt
-  const user = await serverAuth.getUser(decoded.uid)
-
-  // Return the user
-  return user
 }
 
 const BulletListLoader = () => <BulletList />
