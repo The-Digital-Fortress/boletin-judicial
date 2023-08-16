@@ -37,10 +37,12 @@ export default BoletinV2
 export const action: ActionFunction = async ({ request }) => {
   const body = await request.formData()
   const fileId = body.get('fileId')
-  const fileName = body.get('fileName')
-  const file = { fileId, fileName }
+  const fileJury = body.get('fileJury')
+  const fileCity = body.get('fileCity')
+  const fileDescription = body.get('fileDescription')
+  const file = { fileId, jury: fileJury, city: fileCity, description: fileDescription }
 
   addFile(file)
 
-  return { fileId, fileName }
+  return { fileId }
 }

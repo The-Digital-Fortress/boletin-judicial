@@ -30,7 +30,7 @@ const SingleFileUpload = () => {
             {Object.entries(MY_JUZGADO_MAP).map(jury => (
               <option
                 key={jury[0]}
-                value='1civil'
+                value={jury[0]}
                 className='flex cursor-pointer flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-0 whitespace-nowrap'
               >
                 {jury[1]}
@@ -51,7 +51,7 @@ const SingleFileUpload = () => {
             {MUNICIPALITIES.map(municipality => (
               <option
                 key={municipality}
-                value='1civil'
+                value={municipality}
                 className='flex cursor-pointer flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-0 whitespace-nowrap'
               >
                 {municipality}

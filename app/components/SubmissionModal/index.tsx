@@ -3,7 +3,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import SingleFileUpload from '../SingleFileUpload'
 import { actionTypes } from '../AdminTable/adminTableReducer'
-import Notification from '../Notification'
 
 export default function SubmissionModal({ state, dispatch }) {
   return (
@@ -62,7 +61,7 @@ export default function SubmissionModal({ state, dispatch }) {
           </div>
         </div>
 
-        <Notification />
+        {/* <Notification /> */}
       </Dialog>
     </Transition.Root>
   )

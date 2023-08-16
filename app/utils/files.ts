@@ -2,7 +2,9 @@ import { db } from '~/firebase.server'
 
 type File = {
   fileId: FormDataEntryValue | null
-  fileName: FormDataEntryValue | null
+  jury: FormDataEntryValue | null
+  city: FormDataEntryValue | null
+  description: FormDataEntryValue | null
 }
 
 export async function addFile(file: File) {
@@ -12,10 +14,8 @@ export async function addFile(file: File) {
     createdOn: new Date(),
     fileFoud: false,
     fileFoundUrl: '',
-    jury: '',
     lastModified: new Date(),
     uid: 'FFeNC7y8vBhs1rOgUSTwSR6gXMt1',
-    description: '',
     city: '',
   })
 }
