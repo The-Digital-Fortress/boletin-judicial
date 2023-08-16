@@ -18,49 +18,9 @@ import SubmissionModal from '../SubmissionModal'
 import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
 import { MY_JUZGADO_MAP } from '~/constants'
 
-const files = [
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '15/Agosto/2023',
-    city: 'Tijuana',
-  },
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '',
-    city: 'Tijuana',
-  },
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '15/Agosto/2023',
-    city: 'Tijuana',
-  },
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '',
-    city: 'Tijuana',
-  },
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '15/Agosto/2023',
-    city: 'Tijuana',
-  },
-  {
-    jury: '1civil',
-    file: '1111/2023',
-    dateFound: '',
-    city: 'Tijuana',
-  },
-
-  // More people...
-]
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
-export default function AdminTable() {
+export default function AdminTable({ files }) {
   const checkbox = useRef()
   const [checked, setChecked] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false)
@@ -163,7 +123,7 @@ export default function AdminTable() {
                       >
                         {MY_JUZGADO_MAP[file.jury]}
                       </td>
-                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.file}</td>
+                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.fileId}</td>
                       <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
                         <div className='flex items-center gap-3'>
                           <div

@@ -18,3 +18,10 @@ export async function addFile(file: File) {
     uid: 'FFeNC7y8vBhs1rOgUSTwSR6gXMt1',
   })
 }
+
+export async function getFiles() {
+  const filesRef = db.collection('userFiles')
+  const docs = await filesRef.get()
+  const files = docs.docs.map(doc => doc.data())
+  return files
+}

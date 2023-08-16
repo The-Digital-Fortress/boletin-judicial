@@ -3,11 +3,11 @@ import Tabs from '~/components/Tabs'
 import { SquaresPlusIcon, UserIcon } from '@heroicons/react/20/solid'
 import AdminTable from '~/components/AdminTable'
 import Navbar from '~/components/Navbar'
-import { routesLoader } from '~/loader'
+import { adminLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
 import type { ActionFunction } from '@remix-run/node'
 import { addFile } from '~/utils/files'
-export { routesLoader as loader }
+export { adminLoader as loader }
 
 const tabs = [
   { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: false },
@@ -15,14 +15,14 @@ const tabs = [
 ]
 
 const BoletinV2 = () => {
-  const user = useLoaderData()
+  const { user, files } = useLoaderData()
 
   return (
     <div>
       <Navbar user={user} />
       <Container>
         <Tabs tabs={tabs} />
-        <AdminTable />
+        <AdminTable files={files} />
       </Container>
     </div>
   )
