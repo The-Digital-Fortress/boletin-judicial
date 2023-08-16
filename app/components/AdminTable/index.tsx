@@ -16,46 +16,66 @@ import { useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { classNames } from '~/utils'
 import SubmissionModal from '../SubmissionModal'
 import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
+import { MY_JUZGADO_MAP } from '~/constants'
 
-const people = [
+const files = [
   {
-    name: 'Lindsay Walton',
-    title: 'Front-end Developer',
-    email: 'lindsay.walton@example.com',
-    role: 'Member',
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '15/Agosto/2023',
+    city: 'Tijuana',
   },
   {
-    name: 'Lindsay Walton',
-    title: 'Front-end Developer',
-    email: 'lindsay.walton@example.com',
-    role: 'Member',
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '',
+    city: 'Tijuana',
   },
   {
-    name: 'Lindsay Walton',
-    title: 'Front-end Developer',
-    email: 'lindsay.walton@example.com',
-    role: 'Member',
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '15/Agosto/2023',
+    city: 'Tijuana',
   },
+  {
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '',
+    city: 'Tijuana',
+  },
+  {
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '15/Agosto/2023',
+    city: 'Tijuana',
+  },
+  {
+    jury: '1civil',
+    file: '1111/2023',
+    dateFound: '',
+    city: 'Tijuana',
+  },
+
   // More people...
 ]
+const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
 export default function AdminTable() {
   const checkbox = useRef()
   const [checked, setChecked] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false)
-  const [selectedPeople, setSelectedPeople] = useState([])
+  const [selectedFiles, setSelectedPeople] = useState([])
   const [state, dispatch] = useReducer(adminTableReducer, initialState)
-  console.log(state)
 
   useLayoutEffect(() => {
-    const isIndeterminate = selectedPeople.length > 0 && selectedPeople.length < people.length
-    setChecked(selectedPeople.length === people.length)
+    const isIndeterminate = selectedFiles.length > 0 && selectedFiles.length < files.length
+    setChecked(selectedFiles.length === files.length)
     setIndeterminate(isIndeterminate)
     checkbox.current.indeterminate = isIndeterminate
-  }, [selectedPeople])
+  }, [selectedFiles])
 
   function toggleAll() {
-    setSelectedPeople(checked || indeterminate ? [] : people)
+    setSelectedPeople(checked || indeterminate ? [] : files)
     setChecked(!checked && !indeterminate)
     setIndeterminate(false)
   }
@@ -77,7 +97,7 @@ export default function AdminTable() {
         <div className='-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
           <div className='inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8'>
             <div className='relative'>
-              {selectedPeople.length > 0 && (
+              {selectedFiles.length > 0 && (
                 <div className='absolute left-14 top-0 flex h-12 items-center space-x-3 bg-white sm:left-12'>
                   <button
                     type='button'
@@ -100,16 +120,16 @@ export default function AdminTable() {
                       />
                     </th>
                     <th scope='col' className='min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'>
-                      Name
+                      Juzgado
                     </th>
                     <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
-                      Title
+                      Expediente
                     </th>
                     <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
-                      Email
+                      Fecha encontrado
                     </th>
                     <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
-                      Role
+                      Ciudad
                     </th>
                     <th scope='col' className='relative py-3.5 pl-3 pr-4 sm:pr-3'>
                       <span className='sr-only'>Edit</span>
@@ -117,20 +137,20 @@ export default function AdminTable() {
                   </tr>
                 </thead>
                 <tbody className='divide-y divide-gray-200 bg-white'>
-                  {people.map(person => (
-                    <tr key={person.email} className={selectedPeople.includes(person) ? 'bg-gray-50' : undefined}>
+                  {files.map(file => (
+                    <tr key={file.dateFound} className={selectedFiles.includes(file) ? 'bg-gray-50' : undefined}>
                       <td className='relative px-7 sm:w-12 sm:px-6'>
-                        {selectedPeople.includes(person) && (
+                        {selectedFiles.includes(file) && (
                           <div className='absolute inset-y-0 left-0 w-0.5 bg-indigo-600' />
                         )}
                         <input
                           type='checkbox'
                           className='absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'
-                          value={person.email}
-                          checked={selectedPeople.includes(person)}
+                          value={file.dateFound}
+                          checked={selectedFiles.includes(file)}
                           onChange={e =>
                             setSelectedPeople(
-                              e.target.checked ? [...selectedPeople, person] : selectedPeople.filter(p => p !== person)
+                              e.target.checked ? [...selectedFiles, file] : selectedFiles.filter(p => p !== file)
                             )
                           }
                         />
@@ -138,17 +158,29 @@ export default function AdminTable() {
                       <td
                         className={classNames(
                           'whitespace-nowrap py-4 pr-3 text-sm font-medium',
-                          selectedPeople.includes(person) ? 'text-indigo-600' : 'text-gray-900'
+                          selectedFiles.includes(file) ? 'text-indigo-600' : 'text-gray-900'
                         )}
                       >
-                        {person.name}
+                        {MY_JUZGADO_MAP[file.jury]}
                       </td>
-                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{person.title}</td>
-                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{person.email}</td>
-                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{person.role}</td>
+                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.file}</td>
+                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
+                        <div className='flex items-center gap-3'>
+                          <div
+                            className={classNames(
+                              file.dateFound ? statuses.found : statuses.notFound,
+                              'flex-none rounded-full p-1 '
+                            )}
+                          >
+                            <div className='h-1.5 w-1.5 rounded-full bg-current' />
+                          </div>
+                          <div className='hidden text-gray-500 sm:block'>{file.dateFound || 'No encontrado'}</div>
+                        </div>
+                      </td>
+                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.city}</td>
                       <td className='whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3'>
                         <a href='#' className='text-indigo-600 hover:text-indigo-900'>
-                          Editar<span className='sr-only'>, {person.name}</span>
+                          Editar<span className='sr-only'>, {file.jury}</span>
                         </a>
                       </td>
                     </tr>

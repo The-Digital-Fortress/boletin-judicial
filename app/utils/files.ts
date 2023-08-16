@@ -16,6 +16,5 @@ export async function addFile(file: File) {
     fileFoundUrl: '',
     lastModified: new Date(),
     uid: 'FFeNC7y8vBhs1rOgUSTwSR6gXMt1',
-    city: '',
   })
 }

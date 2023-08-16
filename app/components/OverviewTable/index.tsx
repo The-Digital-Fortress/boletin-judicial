@@ -9,7 +9,7 @@ const files = [
   },
   {
     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
-    foundDate: '',
+    foundDate: 'Agosto 15 - Tijuana',
     fileJury: '01308/2021',
     partsName: 'ROSA MARIA MARTINEZ ALVAREZ VS ISAAC GARCIA VAZQUEZ Y OTRA. ORDINARIO CIVIL PRESCRIPCION POSITIVA',
   },
