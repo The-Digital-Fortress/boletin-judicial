@@ -36,7 +36,6 @@ const BoletinV2 = () => {
       />
 
       <OverviewTable />
-      <AdminTable />
     </Container>
   )
 }

@@ -17,25 +17,6 @@ const BoletinV2 = () => {
     <Container>
       <Tabs tabs={tabs} />
 
-      {/* Last updated section */}
-      <div className='text-gray-500 text-sm font-medium flex gap-3 items-center'>
-        <span>Ultima actualizacion: </span>
-        <span className='text-indigo-600 text-sm font-medium'>Hace 13 minutos</span>
-        <button className='cursor-pointer rounded-md border-2 border-indigo-600 bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all'>
-          Actualizar
-        </button>
-      </div>
-
-      <input
-        className='w-full rounded-md lg:max-w-[300px] border-indigo-400 focus:border-indigo-600 focus-visible:border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600  border-2'
-        type='text'
-        value={searchTerm}
-        // TODO: handle search
-        // onChange={handleSearch}
-        placeholder='Buscar entre los archivos encontrados...'
-      />
-
-      <OverviewTable />
       <AdminTable />
     </Container>
   )
