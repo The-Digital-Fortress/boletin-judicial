@@ -1,6 +1,7 @@
 // app/routes/logout.ts
 
-import { LoaderFunction, redirect } from "@remix-run/node";
+import type { LoaderFunction} from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { session } from "~/cookies.server";
 
 export const loader: LoaderFunction = async () => {
