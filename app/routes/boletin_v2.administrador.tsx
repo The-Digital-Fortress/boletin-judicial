@@ -8,8 +8,6 @@ import { routesLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
 import type { ActionFunction } from '@remix-run/node'
 import { addFile } from '~/utils/files'
-import Toast from '~/components/Toast'
-import Notification from '~/components/Notification'
 export { routesLoader as loader }
 
 const tabs = [
@@ -19,7 +17,6 @@ const tabs = [
 
 const BoletinV2 = () => {
   const user = useLoaderData()
-  const [searchTerm, setSearchTerm] = useState('')
 
   return (
     <div>
@@ -41,7 +38,6 @@ export const action: ActionFunction = async ({ request }) => {
   const fileCity = body.get('fileCity')
   const fileDescription = body.get('fileDescription')
   const file = { fileId, jury: fileJury, city: fileCity, description: fileDescription }
-
   addFile(file)
 
   return { fileId }
