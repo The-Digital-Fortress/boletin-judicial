@@ -2,6 +2,8 @@
 
 import type { App, ServiceAccount } from "firebase-admin/app";
 import { initializeApp, getApps, cert, getApp } from "firebase-admin/app";
+import { getFirestore, Timestamp, FieldValue, Filter } from "firebase-admin/firestore";
+
 import type { Auth } from "firebase-admin/auth";
 import { getAuth } from "firebase-admin/auth";
 import dotenv from 'dotenv';
@@ -9,6 +11,7 @@ dotenv.config();
 
 let app: App;
 let auth: Auth;
+let db;
 
 const serviceAccount = {
   "type": "service_account",
@@ -29,9 +32,11 @@ if (getApps().length === 0) {
     credential: cert(serviceAccount),
   });
   auth = getAuth(app);
+  db = getFirestore(app);
 } else {
   app = getApp();
   auth = getAuth(app);
+  db = getFirestore(app);
 }
 
-export { auth };
+export { auth, db };

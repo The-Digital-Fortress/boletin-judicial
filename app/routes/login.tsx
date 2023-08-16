@@ -5,7 +5,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"; // Use sign
 import { auth as clientAuth } from "~/firebase.client";
 import type { ActionFunction } from '@remix-run/node';
 import { redirect } from '@remix-run/node'
-import { auth as serverAuth } from "~/firebase.server";
+import { auth as serverAuth, db as serverDb } from "~/firebase.server";
 import { useFetcher } from '@remix-run/react'
 import { session } from '~/cookies.server'
 import GoogleLogin from '~/components/GoogleLogin'
@@ -22,6 +22,23 @@ export const action: ActionFunction = async ({ request }) => {
     // 5 days - can be up to 2 weeks
     expiresIn: 60 * 60 * 24 * 5 * 1000,
   });
+
+  //FIRESTORE
+  const decoded = await serverAuth.verifySessionCookie(jwt);
+  const user = await serverAuth.getUser(decoded.uid);
+  const usersRef = serverDb.collection('users');
+  const userExist = await usersRef.where('__name__', '==', user.uid).limit(1).get();
+
+  if (userExist.empty) {
+    usersRef.doc(user.uid).set({
+      uid: user.uid,
+      name: user.displayName,
+      email: user.email,
+      createdOn: new Date(),
+      expirationDate: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
+      status: 'trial',
+    });
+  }
 
   // Get the returnUrl cookie directly from the request headers
   const returnUrlCookie = request.headers.get("Cookie")?.split("; ").find(cookie => cookie.startsWith("returnUrl="));

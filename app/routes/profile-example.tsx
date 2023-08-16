@@ -5,8 +5,8 @@ import { routesLoader } from '~/loader'
 export { routesLoader as loader };
 
 export default function ProfileExample() {
-
   const user = useLoaderData();
+
   return (
     <div>
       <h1>Profile Test</h1>
