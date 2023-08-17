@@ -4,9 +4,9 @@ import Tabs from '~/components/Tabs'
 import { SquaresPlusIcon, UserIcon } from '@heroicons/react/20/solid'
 import OverviewTable from '~/components/OverviewTable'
 import Navbar from '~/components/Navbar'
-import { routesLoader } from '~/loader'
+import { adminLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
-export { routesLoader as loader }
+export { adminLoader as loader }
 
 const tabs = [
   { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: true },
@@ -14,8 +14,8 @@ const tabs = [
 ]
 
 const BoletinV2 = () => {
-  const user = useLoaderData()
-
+  const { user, summaryFiles } = useLoaderData()
+  
   const [searchTerm, setSearchTerm] = useState('')
 
   return (
@@ -42,7 +42,7 @@ const BoletinV2 = () => {
           placeholder='Buscar entre los archivos encontrados...'
         />
 
-        <OverviewTable />
+        <OverviewTable files={summaryFiles} />
       </Container>
     </div>
   )

@@ -1,9 +1,9 @@
 // loader.ts
 import type { LoaderFunction } from '@remix-run/node'
 import { session } from '~/cookies.server'
-import { auth as serverAuth, db } from '~/firebase.server'
+import { auth as serverAuth } from '~/firebase.server'
 import { redirect } from '@remix-run/node'
-import { getFiles } from './utils/files'
+import { getFiles, getSummaryFiles } from './utils/files'
 
 export const indexLoader: LoaderFunction = async ({ request }) => {
   // Get the cookie value (JWT)
@@ -97,8 +97,9 @@ export const adminLoader: LoaderFunction = async ({ request }) => {
 
   // Return user from jwt
   const user = await serverAuth.getUser(decoded.uid)
-  const files = await getFiles()
+  const files = await getFiles(user)
+  const summaryFiles = await getSummaryFiles(user)
 
   // Return the user
-  return { user, files }
+  return { user, files, summaryFiles }
 }

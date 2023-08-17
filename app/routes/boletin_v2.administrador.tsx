@@ -6,7 +6,7 @@ import Navbar from '~/components/Navbar'
 import { adminLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
 import type { ActionFunction } from '@remix-run/node'
-import { addFile } from '~/utils/files'
+import { addFile, getCurrentUser } from '~/utils/files'
 export { adminLoader as loader }
 
 const tabs = [
@@ -36,8 +36,9 @@ export const action: ActionFunction = async ({ request }) => {
   const fileJury = body.get('fileJury')
   const fileCity = body.get('fileCity')
   const fileDescription = body.get('fileDescription')
-  const file = { fileId, jury: fileJury, city: fileCity, description: fileDescription }
-  addFile(file)
+  const file = { fileId, fileJury: fileJury, city: fileCity, description: fileDescription }
+  const user = await getCurrentUser(request)
+  addFile(file, user)
 
   return { fileId }
 }

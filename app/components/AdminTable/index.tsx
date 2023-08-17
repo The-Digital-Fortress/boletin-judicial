@@ -121,7 +121,7 @@ export default function AdminTable({ files }) {
                           selectedFiles.includes(file) ? 'text-indigo-600' : 'text-gray-900'
                         )}
                       >
-                        {MY_JUZGADO_MAP[file.jury]}
+                        {MY_JUZGADO_MAP[file.fileJury]}
                       </td>
                       <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.fileId}</td>
                       <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>

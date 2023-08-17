@@ -1,25 +1,29 @@
 import { classNames } from '~/utils'
+import { MY_JUZGADO_MAP } from '~/constants'
+import { Timestamp } from 'firebase-admin/firestore'
 
-const files = [
-  {
-    fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
-    foundDate: 'Agosto 15 - Tijuana',
-    fileJury: '01308/2021',
-    partsName: 'ROSA MARIA MARTINEZ ALVAREZ VS ISAAC GARCIA VAZQUEZ Y OTRA. ORDINARIO CIVIL PRESCRIPCION POSITIVA',
-  },
-  {
-    fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
-    foundDate: 'Agosto 15 - Tijuana',
-    fileJury: '01308/2021',
-    partsName: 'ROSA MARIA MARTINEZ ALVAREZ VS ISAAC GARCIA VAZQUEZ Y OTRA. ORDINARIO CIVIL PRESCRIPCION POSITIVA',
-  },
-  // { file: 'Lindsay Walton', title: 'Front-end Developer', foundDate: '', role: 'Member' },
-  // More people...
-]
+
+// const files = [
+//   {
+//     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
+//     foundDate: 'Agosto 15 - Tijuana',
+//     fileJury: '01308/2021',
+//     partsName: 'ROSA MARIA MARTINEZ ALVAREZ VS ISAAC GARCIA VAZQUEZ Y OTRA. ORDINARIO CIVIL PRESCRIPCION POSITIVA',
+//   },
+//   {
+//     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
+//     foundDate: 'Agosto 15 - Tijuana',
+//     fileJury: '01308/2021',
+//     partsName: 'ROSA MARIA MARTINEZ ALVAREZ VS ISAAC GARCIA VAZQUEZ Y OTRA. ORDINARIO CIVIL PRESCRIPCION POSITIVA',
+//   },
+//   // { file: 'Lindsay Walton', title: 'Front-end Developer', foundDate: '', role: 'Member' },
+//   // More people...
+// ]
 
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
-export default function OverviewTable() {
+export default function OverviewTable({ files }) {
+
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>
@@ -61,7 +65,7 @@ export default function OverviewTable() {
                 </tr>
               </thead>
               <tbody>
-                {files.map((file, fileIdx) => (
+                {files?.map((file, fileIdx) => (
                   <tr key={file.fileTitle}>
                     <td
                       className={classNames(
@@ -69,7 +73,7 @@ export default function OverviewTable() {
                         'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                       )}
                     >
-                      {file.fileTitle}
+                      {file.fileId}
                     </td>
                     <td
                       className={classNames(
@@ -86,7 +90,7 @@ export default function OverviewTable() {
                         >
                           <div className='h-1.5 w-1.5 rounded-full bg-current' />
                         </div>
-                        <div className='hidden text-gray-500 sm:block'>{file.foundDate || 'No encontrado'}</div>
+                        <div className='hidden text-gray-500 sm:block'>{ file.foundDate._seconds || 'No encontrado'}</div>
                       </div>
                     </td>
                     <td
@@ -95,7 +99,7 @@ export default function OverviewTable() {
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
-                      {file.fileJury}
+                      {MY_JUZGADO_MAP[file.fileJury]}
                     </td>
                     <td
                       className={classNames(
