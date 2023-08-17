@@ -17,6 +17,7 @@ import { classNames } from '~/utils'
 import SubmissionModal from '../SubmissionModal'
 import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
 import { MY_JUZGADO_MAP } from '~/constants'
+import { convertTimestampToDate } from '~/utils/files'
 
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
@@ -98,7 +99,7 @@ export default function AdminTable({ files }) {
                 </thead>
                 <tbody className='divide-y divide-gray-200 bg-white'>
                   {files.map(file => (
-                    <tr key={file.dateFound} className={selectedFiles.includes(file) ? 'bg-gray-50' : undefined}>
+                    <tr key={file.foundDate} className={selectedFiles.includes(file) ? 'bg-gray-50' : undefined}>
                       <td className='relative px-7 sm:w-12 sm:px-6'>
                         {selectedFiles.includes(file) && (
                           <div className='absolute inset-y-0 left-0 w-0.5 bg-indigo-600' />
@@ -106,7 +107,7 @@ export default function AdminTable({ files }) {
                         <input
                           type='checkbox'
                           className='absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'
-                          value={file.dateFound}
+                          value={file.foundDate}
                           checked={selectedFiles.includes(file)}
                           onChange={e =>
                             setSelectedPeople(
@@ -128,13 +129,14 @@ export default function AdminTable({ files }) {
                         <div className='flex items-center gap-3'>
                           <div
                             className={classNames(
-                              file.dateFound ? statuses.found : statuses.notFound,
+                              file.foundDate ? statuses.found : statuses.notFound,
                               'flex-none rounded-full p-1 '
                             )}
                           >
                             <div className='h-1.5 w-1.5 rounded-full bg-current' />
                           </div>
-                          <div className='hidden text-gray-500 sm:block'>{file.dateFound || 'No encontrado'}</div>
+                          <div className='hidden text-gray-500 sm:block'>{ 
+                          convertTimestampToDate(file.foundDate) || 'No encontrado'}</div>
                         </div>
                       </td>
                       <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.city}</td>
