@@ -1,6 +1,7 @@
 import { classNames } from '~/utils'
 import { MY_JUZGADO_MAP } from '~/constants'
-import { convertTimestampToDate } from '~/utils/files'
+import { Timestamp } from 'firebase-admin/firestore'
+
 
 // const files = [
 //   {
@@ -89,7 +90,7 @@ export default function OverviewTable({ files }) {
                         >
                           <div className='h-1.5 w-1.5 rounded-full bg-current' />
                         </div>
-                        <div className='hidden text-gray-500 sm:block'>{ convertTimestampToDate(file.foundDate) || 'No encontrado'}</div>
+                        <div className='hidden text-gray-500 sm:block'>{ file.foundDate._seconds || 'No encontrado'}</div>
                       </div>
                     </td>
                     <td

@@ -1,6 +1,5 @@
 import { session } from '~/cookies.server'
 import { auth as serverAuth, db } from '~/firebase.server'
-import { Timestamp } from 'firebase-admin/firestore'
 
 type File = {
   fileId: FormDataEntryValue | null
@@ -52,19 +51,4 @@ export async function getCurrentUser(request) {
   const user = await serverAuth.getUser(decoded.uid)
 
   return user
-}
-
-export function convertTimestampToDate(timestamp: { _seconds: number, _nanoseconds: number} ) {
-  if (!timestamp) {
-    return null
-  }
-
-  const firebaseTimestamp = new Timestamp(timestamp._seconds, timestamp._nanoseconds)
-  const date = firebaseTimestamp.toDate()
-  const formattedDate = date.toLocaleDateString('es-MX', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
-  return formattedDate
 }
