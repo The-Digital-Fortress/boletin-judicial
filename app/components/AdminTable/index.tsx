@@ -89,7 +89,7 @@ export default function AdminTable({ files }) {
                       />
                     </th>
                     <th scope='col' className='min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'>
-                      Juzgado
+                      Tribunal / Juzgado
                     </th>
                     <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
                       Expediente
