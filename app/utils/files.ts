@@ -1,4 +1,5 @@
 import { session } from '~/cookies.server'
+import { uuidv4 } from '@firebase/util'
 import { auth as serverAuth, db } from '~/firebase.server'
 
 type File = {
@@ -9,9 +10,11 @@ type File = {
 }
 
 export async function addFile(file: File, user: any) {
+  const id = uuidv4()
   const filesRef = db.collection('userFiles')
-  await filesRef.doc().set({
+  await filesRef.doc(id).set({
     ...file,
+    id,
     createdOn: new Date(),
     fileFound: false,
     fileFoundUrl: '',
@@ -20,6 +23,10 @@ export async function addFile(file: File, user: any) {
     lastModified: new Date(),
     uid: user.uid,
   })
+}
+
+export async function deleteFile(fileId: string) {
+  await db.collection('userFiles').doc(fileId).delete()
 }
 
 export async function getFiles(user: any) {

@@ -17,10 +17,12 @@ import { classNames, convertDateToLocale } from '~/utils'
 import SubmissionModal from '../SubmissionModal'
 import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
 import { MY_JUZGADO_MAP } from '~/constants'
+import { useSubmit } from '@remix-run/react'
 
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
 export default function AdminTable({ files }) {
+  const submit = useSubmit()
   const checkbox = useRef()
   const [checked, setChecked] = useState(false)
   const [indeterminate, setIndeterminate] = useState(false)
@@ -38,6 +40,12 @@ export default function AdminTable({ files }) {
     setSelectedPeople(checked || indeterminate ? [] : files)
     setChecked(!checked && !indeterminate)
     setIndeterminate(false)
+  }
+
+  function handleDeleteFiles() {
+    const formData = new FormData()
+    formData.append('selectedFiles', selectedFiles.map(file => file?.id).join(','))
+    submit(formData, { method: 'delete' })
   }
 
   return (
@@ -60,6 +68,7 @@ export default function AdminTable({ files }) {
               {selectedFiles.length > 0 && (
                 <div className='absolute left-14 top-0 flex h-12 items-center space-x-3 bg-white sm:left-12'>
                   <button
+                    onClick={handleDeleteFiles}
                     type='button'
                     className='inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white'
                   >
