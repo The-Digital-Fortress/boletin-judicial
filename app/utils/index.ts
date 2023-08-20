@@ -9,5 +9,7 @@ export function convertDateToLocale(date: string) {
     month: 'short',
     year: 'numeric',
   })
+
+  if (formattedDate === 'Invalid Date') return null
   return formattedDate
 }

@@ -34,7 +34,7 @@ export const action: ActionFunction = async ({ request }) => {
   const body = await request.formData()
 
   if (request.method === 'DELETE') {
-    const selectedFiles = body.get('selectedFiles')
+    const selectedFiles = body.get('selectedFiles') as string
     const filesToDelete = selectedFiles?.split(',')
     const fileOperations = filesToDelete.map(fileId => deleteFile(fileId))
     await Promise.all(fileOperations)
