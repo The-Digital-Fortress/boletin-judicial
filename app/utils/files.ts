@@ -1,6 +1,5 @@
 import { session } from '~/cookies.server'
 import { auth as serverAuth, db } from '~/firebase.server'
-import { Timestamp } from 'firebase-admin/firestore'
 
 type File = {
   fileId: FormDataEntryValue | null
@@ -26,14 +25,18 @@ export async function addFile(file: File, user: any) {
 export async function getFiles(user: any) {
   const filesRef = db.collection('userFiles')
   const docs = await filesRef.where('uid', '==', user.uid).get()
-  const files = docs.docs.map(doc => doc.data())
+  const files = docs.docs.map(doc => {
+    return { ...doc.data(), foundDate: doc.data().foundDate?.toDate() }
+  })
   return files
 }
 
 export async function getSummaryFiles(user: any) {
   const filesRef = db.collection('userFiles')
   const docs = await filesRef.where('uid', '==', user.uid).where('fileFound', '==', true).get()
-  const files = docs.docs.map(doc => doc.data())
+  const files = docs.docs.map(doc => {
+    return { ...doc.data(), foundDate: doc.data().foundDate?.toDate() }
+  })
   return files
 }
 
@@ -48,19 +51,4 @@ export async function getCurrentUser(request) {
   const user = await serverAuth.getUser(decoded.uid)
 
   return user
-}
-
-export function convertTimestampToDate(timestamp: { _seconds: number; _nanoseconds: number }) {
-  if (!timestamp) {
-    return null
-  }
-
-  const firebaseTimestamp = new Timestamp(timestamp._seconds, timestamp._nanoseconds)
-  const date = firebaseTimestamp.toDate()
-  const formattedDate = date.toLocaleDateString('es-MX', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
-  return formattedDate
 }

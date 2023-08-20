@@ -1,6 +1,5 @@
-import { classNames } from '~/utils'
+import { classNames, convertDateToLocale } from '~/utils'
 import { MY_JUZGADO_MAP } from '~/constants'
-import { Timestamp } from 'firebase-admin/firestore'
 
 // const files = [
 //   {
@@ -82,14 +81,14 @@ export default function OverviewTable({ files }) {
                       <div className='flex items-center gap-3'>
                         <div
                           className={classNames(
-                            file.foundDate ? statuses.found : statuses.notFound,
+                            convertDateToLocale(file.foundDate) ? statuses.found : statuses.notFound,
                             'flex-none rounded-full p-1 '
                           )}
                         >
                           <div className='h-1.5 w-1.5 rounded-full bg-current' />
                         </div>
                         <div className='hidden text-gray-500 sm:block'>
-                          {file.foundDate._seconds || 'No encontrado'}
+                          {convertDateToLocale(file.foundDate) || 'No encontrado'}
                         </div>
                       </div>
                     </td>

@@ -13,7 +13,7 @@
   ```
 */
 import { useLayoutEffect, useReducer, useRef, useState } from 'react'
-import { classNames } from '~/utils'
+import { classNames, convertDateToLocale } from '~/utils'
 import SubmissionModal from '../SubmissionModal'
 import { actionTypes, adminTableReducer, initialState } from './adminTableReducer'
 import { MY_JUZGADO_MAP } from '~/constants'
@@ -106,7 +106,7 @@ export default function AdminTable({ files }) {
                         <input
                           type='checkbox'
                           className='absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'
-                          value={file.dateFound}
+                          value={file.foundDate}
                           checked={selectedFiles.includes(file)}
                           onChange={e =>
                             setSelectedPeople(
@@ -128,13 +128,15 @@ export default function AdminTable({ files }) {
                         <div className='flex items-center gap-3'>
                           <div
                             className={classNames(
-                              file.dateFound ? statuses.found : statuses.notFound,
+                              file.foundDate ? statuses.found : statuses.notFound,
                               'flex-none rounded-full p-1 '
                             )}
                           >
                             <div className='h-1.5 w-1.5 rounded-full bg-current' />
                           </div>
-                          <div className='hidden text-gray-500 sm:block'>{file.dateFound || 'No encontrado'}</div>
+                          <div className='hidden text-gray-500 sm:block'>
+                            {convertDateToLocale(file.foundDate) || 'No encontrado'}
+                          </div>
                         </div>
                       </td>
                       <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.city}</td>

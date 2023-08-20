@@ -15,7 +15,6 @@ const tabs = [
 
 const BoletinV2 = () => {
   const { user, summaryFiles } = useLoaderData()
-
   const [searchTerm, setSearchTerm] = useState('')
 
   return (
