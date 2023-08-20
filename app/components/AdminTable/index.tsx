@@ -97,8 +97,8 @@ export default function AdminTable({ files }) {
                   </tr>
                 </thead>
                 <tbody className='divide-y divide-gray-200 bg-white'>
-                  {files.map(file => (
-                    <tr key={file.dateFound} className={selectedFiles.includes(file) ? 'bg-gray-50' : undefined}>
+                  {files.map((file, idx) => (
+                    <tr key={idx} className={selectedFiles.includes(file) ? 'bg-gray-50' : undefined}>
                       <td className='relative px-7 sm:w-12 sm:px-6'>
                         {selectedFiles.includes(file) && (
                           <div className='absolute inset-y-0 left-0 w-0.5 bg-indigo-600' />

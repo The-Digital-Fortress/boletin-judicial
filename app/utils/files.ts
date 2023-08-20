@@ -1,5 +1,6 @@
 import { session } from '~/cookies.server'
 import { auth as serverAuth, db } from '~/firebase.server'
+import { Timestamp } from 'firebase-admin/firestore'
 
 type File = {
   fileId: FormDataEntryValue | null
@@ -31,16 +32,12 @@ export async function getFiles(user: any) {
 
 export async function getSummaryFiles(user: any) {
   const filesRef = db.collection('userFiles')
-  const docs = await filesRef.
-  where('uid', '==', user.uid).
-  where('fileFound', '==', true).
-  get()
+  const docs = await filesRef.where('uid', '==', user.uid).where('fileFound', '==', true).get()
   const files = docs.docs.map(doc => doc.data())
   return files
 }
 
 export async function getCurrentUser(request) {
-
   const jwt = await session.parse(request.headers.get('Cookie'))
 
   if (!jwt) {
@@ -51,4 +48,19 @@ export async function getCurrentUser(request) {
   const user = await serverAuth.getUser(decoded.uid)
 
   return user
+}
+
+export function convertTimestampToDate(timestamp: { _seconds: number; _nanoseconds: number }) {
+  if (!timestamp) {
+    return null
+  }
+
+  const firebaseTimestamp = new Timestamp(timestamp._seconds, timestamp._nanoseconds)
+  const date = firebaseTimestamp.toDate()
+  const formattedDate = date.toLocaleDateString('es-MX', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+  return formattedDate
 }

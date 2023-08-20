@@ -15,7 +15,7 @@ const tabs = [
 
 const BoletinV2 = () => {
   const { user, summaryFiles } = useLoaderData()
-  
+
   const [searchTerm, setSearchTerm] = useState('')
 
   return (
@@ -36,7 +36,7 @@ const BoletinV2 = () => {
         <input
           className='w-full rounded-md lg:max-w-[300px] border-indigo-400 focus:border-indigo-600 focus-visible:border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600  border-2'
           type='text'
-          value={searchTerm}
+          // value={searchTerm}
           // TODO: handle search
           // onChange={handleSearch}
           placeholder='Buscar entre los archivos encontrados...'

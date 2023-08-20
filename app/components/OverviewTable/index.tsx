@@ -2,7 +2,6 @@ import { classNames } from '~/utils'
 import { MY_JUZGADO_MAP } from '~/constants'
 import { Timestamp } from 'firebase-admin/firestore'
 
-
 // const files = [
 //   {
 //     fileTitle: 'JUZGADO QUINTO CIVIL DE TIJUANA, B.C. 05 DE JULIO DE 2023',
@@ -23,7 +22,6 @@ import { Timestamp } from 'firebase-admin/firestore'
 const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
 
 export default function OverviewTable({ files }) {
-
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>
@@ -65,11 +63,11 @@ export default function OverviewTable({ files }) {
                 </tr>
               </thead>
               <tbody>
-                {files?.map((file, fileIdx) => (
-                  <tr key={file.fileTitle}>
+                {files?.map((file, idx) => (
+                  <tr key={idx}>
                     <td
                       className={classNames(
-                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
                       )}
                     >
@@ -77,7 +75,7 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
@@ -90,12 +88,14 @@ export default function OverviewTable({ files }) {
                         >
                           <div className='h-1.5 w-1.5 rounded-full bg-current' />
                         </div>
-                        <div className='hidden text-gray-500 sm:block'>{ file.foundDate._seconds || 'No encontrado'}</div>
+                        <div className='hidden text-gray-500 sm:block'>
+                          {file.foundDate._seconds || 'No encontrado'}
+                        </div>
                       </div>
                     </td>
                     <td
                       className={classNames(
-                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
@@ -103,7 +103,7 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'min-w-[300px] px-3 py-4 text-sm text-gray-500'
                       )}
                     >
@@ -111,7 +111,7 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        fileIdx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                       )}
                     >
