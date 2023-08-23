@@ -9,11 +9,12 @@ import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
-import {  BASE_URL_V1 } from './api'
+import { BASE_URL_V1 } from './api'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { routesLoader } from '~/loader'
+import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
 
-export { routesLoader as loader };
+export { routesLoader as loader }
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
@@ -22,7 +23,7 @@ export const meta: V2_MetaFunction = () => {
 const BulletListLoader = () => <BulletList />
 
 const Boletin = () => {
-  const user = useLoaderData();
+  const user = useLoaderData()
   const [fileName, setFileName] = useState('')
   const [municipality, setMunicipality] = useState('Tijuana')
   const now = moment().tz('America/Los_Angeles')
@@ -40,19 +41,19 @@ const Boletin = () => {
   }
 
   const handleFileClear = () => {
-    setFileName('');
-  };
+    setFileName('')
+  }
 
   const handleDateChange = (date: any) => {
     setDate({
-        startDate: date.startDate,
-        endDate: date.endDate,
-      })
+      startDate: date.startDate,
+      endDate: date.endDate,
+    })
   }
-    
+
   return (
     <div>
-      <Navbar user={user}/>
+      <Navbar user={user} />
       <div className='mx-auto mt-4 lg:mt-16 px-2 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
         <Form
           action='/boletin'
@@ -78,11 +79,9 @@ const Boletin = () => {
 
           {fileName && (
             <div className='flex flex-row items-center gap-2 w-full lg:w-auto rounded-md border-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 whitespace-nowrap'>
-              <p>
-                {fileName}
-              </p>
+              <p>{fileName}</p>
               <XMarkIcon onClick={handleFileClear} className='w-5 h-5 text-gray-400 cursor-pointer ml-2' />
-          </div>
+            </div>
           )}
 
           <div className='w-full lg:max-w-[200px]'>
@@ -97,38 +96,20 @@ const Boletin = () => {
             />
           </div>
 
-          <input
-            readOnly
-            type='date'
-            name='date-picker'
-            id='date-picker'
-            value={date.startDate}
-            className='hidden'
-          />
+          <input readOnly type='date' name='date-picker' id='date-picker' value={date.startDate} className='hidden' />
 
-          <Dropdown setMunicipality={setMunicipality} />
+          <Dropdown setFunction={setMunicipality} dropdownItems={MUNICIPALITIES} />
 
-          <input
-            type='text'
-            name='municipality'
-            id='municipality'
-            value={municipality}
-            className='hidden'
-            readOnly
-          />
+          <input type='text' name='municipality' id='municipality' value={municipality} className='hidden' readOnly />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
-            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>
-              Subir archivo →
-            </button>
+            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>Subir archivo →</button>
           </label>
         </Form>
 
         {actionData?.url && (
           <div className='flex flex-col gap-2'>
-            <span className='font-semibold leading-6 text-indigo-400'>
-              Boletin comparado
-            </span>
+            <span className='font-semibold leading-6 text-indigo-400'>Boletin comparado</span>
 
             <Link
               to={actionData.url}
@@ -146,21 +127,19 @@ const Boletin = () => {
         </div>
       ) : (
         <>
-          { actionData?.status === 400 && (
-            actionData?.message[0] === "No main section found" ? (<div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
-              <span className='text-indigo-400 font-semibold'>
-                No se encontro boletin para la fecha seleccionada!
-              </span>
-            </div>
-          ) : (
-            <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
-              <span className='text-indigo-400 font-semibold'>
-                {actionData?.message}
-              </span>
-            </div>
-          )
-          )}
-          
+          {actionData?.status === 400 &&
+            (actionData?.message[0] === 'No main section found' ? (
+              <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+                <span className='text-indigo-400 font-semibold'>
+                  No se encontro boletin para la fecha seleccionada!
+                </span>
+              </div>
+            ) : (
+              <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
+                <span className='text-indigo-400 font-semibold'>{actionData?.message}</span>
+              </div>
+            ))}
+
           {actionData?.status === 200 && actionData?.data?.matchedFiles?.length === 0 && (
             <div className='mx-auto mt-10 max-w-7xl lg:px-8 gap-4 flex flex-col justify-between'>
               <span className='text-indigo-400 font-semibold'>
@@ -172,7 +151,6 @@ const Boletin = () => {
           {/* <UnmatchedFilesTable
             unmatchedFiles={actionData?.data?.unmatchedFiles}
           /> */}
-
         </>
       )}
 
@@ -203,82 +181,55 @@ export const action: ActionFunction = async ({ request }) => {
     Tecate: 'te',
   }
 
-  if (!file)
-    return json({ status: 400, message: 'Es necesario subir un archivo' })
+  if (!file) return json({ status: 400, message: 'Es necesario subir un archivo' })
 
-  if (!date)
-    return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
+  if (!date) return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
-  const formData = new FormData();
-  formData.append('xlsxFile', file);
+  const formData = new FormData()
+  formData.append('xlsxFile', file)
 
   const matchedFiles: any = []
   const unmatchedFiles: any = []
 
   // File upload request
-  try{
+  try {
     const fileUploadRequest = await fetch(`${BASE_URL_V1}/file`, {
       headers: {
         'access-control-allow-origin': '*', // CORS
       },
       method: 'POST',
       body: formData,
-    });
-    const fileUploadResponse = await fileUploadRequest.json();
-    paddedIds = JSON.parse(JSON.stringify(fileUploadResponse));
+    })
+    const fileUploadResponse = await fileUploadRequest.json()
+    paddedIds = JSON.parse(JSON.stringify(fileUploadResponse))
   } catch (error) {
-    console.log("error:", error)
+    console.log('error:', error)
   }
 
   // Boletin request
-  const city = municipalityMap[municipality || ''];
-  const queryParams = new URLSearchParams();
-  queryParams.append('date', date.toString());
-  queryParams.append('city', city);
+  const city = municipalityMap[municipality || '']
+  const queryParams = new URLSearchParams()
+  queryParams.append('date', date.toString())
+  queryParams.append('city', city)
 
-  try{
-  const boletinRequest = await fetch(`${BASE_URL_V1}/boletin?${queryParams.toString()}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'access-control-allow-origin': '*', // CORS
-    },
-    method: 'GET',
-  });
-  const boletinResponse = await boletinRequest.json();
-  boletinData = JSON.parse(JSON.stringify(boletinResponse));
-} catch (error) {
-    console.log("error:", error)
-  }
-
-  const myJuzgadoMap: Record<string, string> = {
-    "1civil": "JUZGADO PRIMERO CIVIL",
-    "2civil": "JUZGADO SEGUNDO CIVIL",
-    "3civil": "JUZGADO TERCERO CIVIL",
-    "4civil": "JUZGADO CUARTO CIVIL",
-    "5civil": "JUZGADO QUINTO CIVIL",
-    "6civil": "JUZGADO SEXTO CIVIL",
-    "7civil": "JUZGADO SEPTIMO CIVIL",
-    "8civil": "JUZGADO OCTAVO CIVIL",
-    "9civil": "JUZGADO NOVENO CIVIL",
-    "10civil": "JUZGADO DECIMO CIVIL",
-    "11civil": "JUZGADO DECIMO PRIMERO CIVIL",
-    "1familiar": "JUZGADO PRIMERO DE LO FAMILIAR",
-    "2familiar": "JUZGADO SEGUNDO DE LO FAMILIAR",
-    "3familiar": "JUZGADO TERCERO DE LO FAMILIAR",
-    "4familiar": "JUZGADO CUARTO DE LO FAMILIAR",
-    "5familiar": "JUZGADO QUINTO DE LO FAMILIAR",
-    "6familiar": "JUZGADO SEXTO DE LO FAMILIAR",
-    "7familiar": "JUZGADO SEPTIMO DE LO FAMILIAR",
-    "8familiar": "JUZGADO OCTAVO DE LO FAMILIAR",
-    "9familiar": "JUZGADO NOVENO DE LO FAMILIAR",
-    "10familiar": "JUZGADO DECIMO DE LO FAMILIAR",
-    "11familiar": "JUZGADO DECIMO PRIMERO DE LO FAMILIAR",
+  try {
+    const boletinRequest = await fetch(`${BASE_URL_V1}/boletin?${queryParams.toString()}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'access-control-allow-origin': '*', // CORS
+      },
+      method: 'GET',
+    })
+    const boletinResponse = await boletinRequest.json()
+    boletinData = JSON.parse(JSON.stringify(boletinResponse))
+  } catch (error) {
+    console.log('error:', error)
   }
 
   const excelJuzgadosConverted = paddedIds.data.zeroPaddedColumns.map(subarray => [
-    subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()] || subarray[0],
-    subarray[1]
-  ]);
+    (subarray[0] && MY_JUZGADO_MAP[subarray[0].toLowerCase()]) || subarray[0],
+    subarray[1],
+  ])
 
   if (boletinData['status'] !== 200) {
     return json({
@@ -291,10 +242,10 @@ export const action: ActionFunction = async ({ request }) => {
     boletinData.data.boletinData.forEach(jury => {
       jury?.files.forEach((file, index) => {
         // console.log("file1:", file[1], " jury key:", jury.key)
-        const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
+        const fileExists = excelJuzgadosConverted.some(
+          ([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
         )
-        if (fileExists)
-          matchedFiles.push({ '3': jury?.key, ...file })
+        if (fileExists) matchedFiles.push({ '3': jury?.key, ...file })
         else unmatchedFiles.push({ '3': jury?.key, ...file })
       })
     })
@@ -306,5 +257,3 @@ export const action: ActionFunction = async ({ request }) => {
     url: boletinData.url,
   })
 }
-
-
