@@ -1,6 +1,6 @@
 import type { ActionFunction } from '@remix-run/node'
 import { useState } from 'react'
-import { json } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
 import { Form, Link, useActionData, useNavigation, useLoaderData } from '@remix-run/react'
@@ -10,6 +10,8 @@ import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
 import { BASE_URL_V1 } from './api'
+import { session } from '~/cookies.server'
+import { auth as serverAuth } from '~/firebase.server'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { routesLoader } from '~/loader'
 import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
@@ -18,6 +20,46 @@ export { routesLoader as loader }
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
+}
+
+export const loader: LoaderFunction = async ({ request }) => {
+  // Get the cookie value (JWT)
+  const jwt = await session.parse(request.headers.get('Cookie'))
+
+  // No JWT found...
+  if (!jwt) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url)
+    const expires = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`
+    return redirect('/login', {
+      headers: {
+        'Set-Cookie': cookie,
+      },
+    })
+  }
+
+  // Verify the JWT is valid
+  const decoded = await serverAuth.verifySessionCookie(jwt)
+
+  // No valid JWT found...
+  if (!decoded) {
+    // Set the current page's URL in a cookie in the redirect response
+    const returnUrl = encodeURIComponent(request.url)
+    const expires = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes expiration
+    const cookie = `returnUrl=${returnUrl}; Expires=${expires.toUTCString()}; HttpOnly; Path=/;`
+    return redirect('/login', {
+      headers: {
+        'Set-Cookie': cookie,
+      },
+    })
+  }
+
+  // Return user from jwt
+  const user = await serverAuth.getUser(decoded.uid)
+
+  // Return the user
+  return user
 }
 
 const BulletListLoader = () => <BulletList />
@@ -226,8 +268,33 @@ export const action: ActionFunction = async ({ request }) => {
     console.log('error:', error)
   }
 
+  const myJuzgadoMap: Record<string, string> = {
+    '1civil': 'JUZGADO PRIMERO CIVIL',
+    '2civil': 'JUZGADO SEGUNDO CIVIL',
+    '3civil': 'JUZGADO TERCERO CIVIL',
+    '4civil': 'JUZGADO CUARTO CIVIL',
+    '5civil': 'JUZGADO QUINTO CIVIL',
+    '6civil': 'JUZGADO SEXTO CIVIL',
+    '7civil': 'JUZGADO SEPTIMO CIVIL',
+    '8civil': 'JUZGADO OCTAVO CIVIL',
+    '9civil': 'JUZGADO NOVENO CIVIL',
+    '10civil': 'JUZGADO DECIMO CIVIL',
+    '11civil': 'JUZGADO DECIMO PRIMERO CIVIL',
+    '1familiar': 'JUZGADO PRIMERO DE LO FAMILIAR',
+    '2familiar': 'JUZGADO SEGUNDO DE LO FAMILIAR',
+    '3familiar': 'JUZGADO TERCERO DE LO FAMILIAR',
+    '4familiar': 'JUZGADO CUARTO DE LO FAMILIAR',
+    '5familiar': 'JUZGADO QUINTO DE LO FAMILIAR',
+    '6familiar': 'JUZGADO SEXTO DE LO FAMILIAR',
+    '7familiar': 'JUZGADO SEPTIMO DE LO FAMILIAR',
+    '8familiar': 'JUZGADO OCTAVO DE LO FAMILIAR',
+    '9familiar': 'JUZGADO NOVENO DE LO FAMILIAR',
+    '10familiar': 'JUZGADO DECIMO DE LO FAMILIAR',
+    '11familiar': 'JUZGADO DECIMO PRIMERO DE LO FAMILIAR',
+  }
+
   const excelJuzgadosConverted = paddedIds.data.zeroPaddedColumns.map(subarray => [
-    (subarray[0] && MY_JUZGADO_MAP[subarray[0].toLowerCase()]) || subarray[0],
+    (subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()]) || subarray[0],
     subarray[1],
   ])
 
