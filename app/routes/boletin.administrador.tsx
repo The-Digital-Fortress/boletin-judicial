@@ -10,8 +10,8 @@ import { addFile, deleteFile, getCurrentUser } from '~/utils/files'
 export { adminLoader as loader }
 
 const tabs = [
-  { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: false },
-  { name: 'Administrador de archivos', href: '/boletin_v2/administrador', icon: UserIcon, current: true },
+  { name: 'Resumen', href: '/boletin/resumen', icon: SquaresPlusIcon, current: false },
+  { name: 'Administrador de archivos', href: '/boletin/administrador', icon: UserIcon, current: true },
 ]
 
 const BoletinV2 = () => {
@@ -48,6 +48,6 @@ export const action: ActionFunction = async ({ request }) => {
     const user = await getCurrentUser(request)
     addFile(file, user)
 
-    return { fileId }
+    return { fileId: '', fileJury: '', fileCity: '', fileDescription: '' };
   }
 }

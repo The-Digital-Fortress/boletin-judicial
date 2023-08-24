@@ -9,8 +9,8 @@ import { useLoaderData } from '@remix-run/react'
 export { adminLoader as loader }
 
 const tabs = [
-  { name: 'Resumen', href: '/boletin_v2/resumen', icon: SquaresPlusIcon, current: true },
-  { name: 'Administrador de archivos', href: '/boletin_v2/administrador', icon: UserIcon, current: false },
+  { name: 'Resumen', href: '/boletin/resumen', icon: SquaresPlusIcon, current: true },
+  { name: 'Administrador de archivos', href: '/boletin/administrador', icon: UserIcon, current: false },
 ]
 
 const BoletinV2 = () => {
@@ -25,11 +25,11 @@ const BoletinV2 = () => {
 
         {/* Last updated section */}
         <div className='text-gray-500 text-sm font-medium flex gap-3 items-center'>
-          <span>Ultima actualizacion: </span>
-          <span className='text-indigo-600 text-sm font-medium'>Hace 13 minutos</span>
-          <button className='cursor-pointer rounded-md border-2 border-indigo-600 bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all'>
+          <button className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
             Actualizar
           </button>
+          <span>Ultima actualizacion: </span>
+          <span className='text-indigo-600 text-sm font-medium'>Hace 13 minutos</span>
         </div>
 
         <input

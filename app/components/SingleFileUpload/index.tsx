@@ -4,7 +4,7 @@ import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
 const SingleFileUpload = () => {
   return (
     <div>
-      <Form method='post' action='/boletin_v2/administrador' className='flex flex-col gap-4'>
+      <Form method='post' action='/boletin/administrador' className='flex flex-col gap-4'>
         <div>
           <label htmlFor='fileId' className='text-sm font-semibold leading-6 text-indigo-600'>
             ID de archivo

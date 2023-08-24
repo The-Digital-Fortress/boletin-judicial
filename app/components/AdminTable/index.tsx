@@ -88,6 +88,9 @@ export default function AdminTable({ files }) {
                         onChange={toggleAll}
                       />
                     </th>
+                    <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
+                      Ciudad
+                    </th>
                     <th scope='col' className='min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'>
                       Tribunal / Juzgado
                     </th>
@@ -96,9 +99,6 @@ export default function AdminTable({ files }) {
                     </th>
                     <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
                       Fecha encontrado
-                    </th>
-                    <th scope='col' className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'>
-                      Ciudad
                     </th>
                     <th scope='col' className='relative py-3.5 pl-3 pr-4 sm:pr-3'>
                       <span className='sr-only'>Edit</span>
@@ -124,10 +124,11 @@ export default function AdminTable({ files }) {
                           }
                         />
                       </td>
+                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.city}</td>
                       <td
                         className={classNames(
                           'whitespace-nowrap py-4 pr-3 text-sm font-medium',
-                          selectedFiles.includes(file) ? 'text-indigo-600' : 'text-gray-900'
+                          selectedFiles.includes(file) ? 'text-indigo-600' : 'text-gray-500'
                         )}
                       >
                         {MY_JUZGADO_MAP[file.fileJury]}
@@ -148,7 +149,6 @@ export default function AdminTable({ files }) {
                           </div>
                         </div>
                       </td>
-                      <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>{file.city}</td>
                       <td className='whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3'>
                         <a href='#' className='text-indigo-600 hover:text-indigo-900'>
                           Editar<span className='sr-only'>, {file.jury}</span>
