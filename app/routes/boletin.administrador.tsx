@@ -48,6 +48,6 @@ export const action: ActionFunction = async ({ request }) => {
     const user = await getCurrentUser(request)
     addFile(file, user)
 
-    return { fileId: '', fileJury: '', fileCity: '', fileDescription: '' };
+    return { fileId, ok: true };
   }
 }
