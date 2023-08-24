@@ -3,6 +3,8 @@ export function classNames(...classes: any[]) {
 }
 
 export function convertDateToLocale(date: string) {
+  if (!date) return null
+  
   const newDate = new Date(date)
   const formattedDate = newDate.toLocaleDateString('es-MX', {
     day: 'numeric',
