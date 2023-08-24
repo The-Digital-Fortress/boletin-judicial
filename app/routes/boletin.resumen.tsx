@@ -65,3 +65,4 @@ const BoletinV2 = () => {
 }
 
 export default BoletinV2
+
