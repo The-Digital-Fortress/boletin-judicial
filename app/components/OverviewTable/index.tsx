@@ -16,6 +16,12 @@ export default function OverviewTable({ files }) {
                     scope='col'
                     className='sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8'
                   >
+                    Ciudad
+                  </th>
+                  <th
+                    scope='col'
+                    className='sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8'
+                  >
                     Tribunal / Juzgado
                   </th>
                   <th
@@ -47,10 +53,11 @@ export default function OverviewTable({ files }) {
               <tbody>
                 {files?.map((file, idx) => (
                   <tr key={idx}>
+                    <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>{file.city}</td>
                     <td
                       className={classNames(
                         idx !== files.length - 1 ? 'border-b border-gray-200' : '',
-                        'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
+                        'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'
                       )}
                     >
                       {MY_JUZGADO_MAP[file.fileJury]}

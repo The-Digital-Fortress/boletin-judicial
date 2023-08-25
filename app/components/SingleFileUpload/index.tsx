@@ -1,10 +1,21 @@
-import { Form } from '@remix-run/react'
+import { Form, useActionData, useNavigation } from '@remix-run/react'
+import { useEffect, useRef } from 'react'
 import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
 
 const SingleFileUpload = () => {
+  let formRef = useRef<HTMLFormElement>(null)
+  let navigation = useNavigation()
+  let actionData = useActionData()
+
+  useEffect(function resetFormOnSuccess() {
+    if (navigation.state === "idle" && actionData?.ok) {
+      formRef.current?.reset()
+    }
+  }, [navigation.state, actionData])
+
   return (
     <div>
-      <Form method='post' action='/boletin_v2/administrador' className='flex flex-col gap-4'>
+      <Form ref={formRef} method='post' action='/boletin/administrador' className='flex flex-col gap-4'>
         <div>
           <label htmlFor='fileId' className='text-sm font-semibold leading-6 text-indigo-600'>
             ID de archivo
@@ -20,7 +31,7 @@ const SingleFileUpload = () => {
 
         <div>
           <label htmlFor='fileJury' className='text-sm font-semibold leading-6 text-indigo-600'>
-            Jurado
+            Juzgado
           </label>
           <select
             id='fileJury'
@@ -62,7 +73,7 @@ const SingleFileUpload = () => {
 
         <div>
           <label htmlFor='fileDescription' className='text-sm font-semibold leading-6 text-indigo-600'>
-            Descripión
+            Descripción
           </label>
           <textarea
             placeholder='(Opcional)'
