@@ -23,4 +23,4 @@ export const MY_JUZGADO_MAP: Record<string, string> = {
   '11familiar': 'JUZGADO DECIMO PRIMERO DE LO FAMILIAR',
 }
 
-export const MUNICIPALITIES: string[] = ['Tijuana', 'Mexicali', 'Ensenada', 'Rosarito']
+export const MUNICIPALITIES: string[] = ['Tijuana', 'Mexicali', 'Ensenada', 'Tecate']

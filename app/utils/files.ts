@@ -40,7 +40,7 @@ export async function getFiles(user: any) {
 
 export async function getSummaryFiles(user: any) {
   const filesRef = db.collection('userFiles')
-  const docs = await filesRef.where('uid', '==', user.uid).where('fileFound', '==', true).get()
+  const docs = await filesRef.where('uid', '==', user.uid).where('fileFound', '==', true).orderBy('foundDate', 'desc').get()
   const files = docs.docs.map(doc => {
     return { ...doc.data(), foundDate: doc.data().foundDate?.toDate() }
   })
