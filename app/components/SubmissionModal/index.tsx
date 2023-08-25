@@ -60,8 +60,6 @@ export default function SubmissionModal({ state, dispatch }) {
             </Transition.Child>
           </div>
         </div>
-
-        {/* <Notification /> */}
       </Dialog>
     </Transition.Root>
   )
