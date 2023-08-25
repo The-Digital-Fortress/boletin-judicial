@@ -1,22 +1,23 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import useNotification from '~/hooks/notifications'
 
 export default function Notification() {
-  const [show, setShow] = useState(true)
+  const { notification } = useNotification()
 
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}
       <div
         aria-live='assertive'
-        className='pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6'
+        className='pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-[1000]'
       >
         <div className='flex w-full flex-col items-center space-y-4 sm:items-end'>
           {/* Notification panel, dynamically insert this into the live region when it needs to be displayed */}
           <Transition
-            show={show}
+            show={notification.show}
             as={Fragment}
             enter='transform ease-out duration-300 transition'
             enterFrom='translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2'
@@ -32,7 +33,7 @@ export default function Notification() {
                     <CheckCircleIcon className='h-6 w-6 text-green-400' aria-hidden='true' />
                   </div>
                   <div className='ml-3 w-0 flex-1 pt-0.5'>
-                    <p className='text-sm font-medium text-gray-900'>Archivo agregado!</p>
+                    <p className='text-sm font-medium text-gray-900'>{notification.message}</p>
                   </div>
                   <div className='ml-4 flex flex-shrink-0'>
                     <button

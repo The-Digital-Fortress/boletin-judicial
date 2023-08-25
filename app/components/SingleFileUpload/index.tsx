@@ -1,7 +1,18 @@
 import { Form } from '@remix-run/react'
 import { MUNICIPALITIES, MY_JUZGADO_MAP } from '~/constants'
+import useNotification from '~/hooks/notifications'
 
 const SingleFileUpload = () => {
+  const { notify } = useNotification()
+
+  const handleSubmit = () => {
+    notify({
+      message: 'Archivo añadido exitosamente',
+      type: 'success',
+      show: true,
+    })
+  }
+
   return (
     <div>
       <Form method='post' action='/boletin_v2/administrador' className='flex flex-col gap-4'>
@@ -74,6 +85,7 @@ const SingleFileUpload = () => {
         </div>
 
         <button
+          onClick={handleSubmit}
           type='submit'
           className='w-full cursor-pointer rounded-md border-2 border-indigo-600 bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
         >
