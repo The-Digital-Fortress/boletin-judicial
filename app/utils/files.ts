@@ -59,3 +59,12 @@ export async function getCurrentUser(request) {
 
   return user
 }
+
+export async function getUserData(user: any) {
+  const usersRef = db.collection('users')
+  const docs = await usersRef.where('uid', '==', user.uid).get()
+  const userData = docs.docs.map(doc => {
+    return { ...doc.data(), lastTimeUpdateFiles: doc.data().lastTimeUpdateFiles?.toDate() }
+  })
+  return userData
+}

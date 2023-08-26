@@ -8,6 +8,7 @@ import { MY_JUZGADO_MAP } from '~/constants'
 import { convertDateToLocale } from '~/utils'
 import { adminLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
+import { convertDateToLocale, minutesPassedFromDateToNow } from '~/utils'
 export { adminLoader as loader }
 
 const tabs = [
@@ -16,7 +17,7 @@ const tabs = [
 ]
 
 const BoletinV2 = () => {
-  const { user, summaryFiles } = useLoaderData()
+  const { user, userData, summaryFiles } = useLoaderData()
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSearch = event => {
@@ -47,7 +48,7 @@ const BoletinV2 = () => {
             Actualizar
           </button>
           <span>Ultima actualizacion: </span>
-          <span className='text-indigo-600 text-sm font-medium'>Hace 13 minutos</span>
+          <span className='text-indigo-600 text-sm font-medium'> hace {minutesPassedFromDateToNow(userData[0].lastTimeUpdateFiles)} minutos </span>
         </div>
 
         <input
