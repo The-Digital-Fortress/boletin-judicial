@@ -37,6 +37,7 @@ export const action: ActionFunction = async ({ request }) => {
       createdOn: new Date(),
       expirationDate: new Date(Date.now() + 60 * 60 * 24 * 14 * 1000),
       status: 'trial',
+      lastTimeUpdateFiles: null,
     });
   }
 
