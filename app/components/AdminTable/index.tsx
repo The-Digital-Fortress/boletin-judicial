@@ -149,11 +149,12 @@ export default function AdminTable({ files }) {
                           </div>
                         </div>
                       </td>
-                      <td className='whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3'>
+                      {/* TODO: Build edit window */}
+                      {/* <td className='whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3'>
                         <a href='#' className='text-indigo-600 hover:text-indigo-900'>
                           Editar<span className='sr-only'>, {file.jury}</span>
                         </a>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
