@@ -13,7 +13,7 @@ export const actionTypes = {
 
 export const initialState = {
   sortingColumn: 'fecha',
-  sortingOrder: 'desc',
+  sortingOrder: '',
   searchTerm: '',
 }
 
