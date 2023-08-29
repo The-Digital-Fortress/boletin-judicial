@@ -1,9 +1,12 @@
 import { classNames, convertDateToLocale } from '~/utils'
-import { MY_JUZGADO_MAP } from '~/constants'
+import { MY_JUZGADO_MAP, STATUSES } from '~/constants'
 
-const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
+type OverviewTableProps = {
+  files: any
+  state: any
+}
 
-export default function OverviewTable({ files }) {
+export default function OverviewTable({ files, state }: OverviewTableProps) {
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>
@@ -51,9 +54,11 @@ export default function OverviewTable({ files }) {
                 </tr>
               </thead>
               <tbody>
-                {files?.map((file, idx) => (
+                {files?.map((file: any, idx: number) => (
                   <tr key={idx}>
-                    <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>{file.city}</td>
+                    <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>
+                      {file.city}
+                    </td>
                     <td
                       className={classNames(
                         idx !== files.length - 1 ? 'border-b border-gray-200' : '',
@@ -79,7 +84,7 @@ export default function OverviewTable({ files }) {
                       <div className='flex items-center gap-3'>
                         <div
                           className={classNames(
-                            convertDateToLocale(file.foundDate) ? statuses.found : statuses.notFound,
+                            convertDateToLocale(file.foundDate) ? STATUSES.found : STATUSES.notFound,
                             'flex-none rounded-full p-1 '
                           )}
                         >
@@ -104,9 +109,10 @@ export default function OverviewTable({ files }) {
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                       )}
                     >
-                      <a href='#' className='text-indigo-600 hover:text-indigo-900'>
+                      {/* TODO: Show detail window */}
+                      {/* <a href='#' className='text-indigo-600 hover:text-indigo-900'>
                         Detalles<span className='sr-only'>, {file.fileTitle}</span>
-                      </a>
+                      </a> */}
                     </td>
                   </tr>
                 ))}
