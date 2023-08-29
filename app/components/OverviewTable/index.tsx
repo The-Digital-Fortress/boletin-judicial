@@ -16,8 +16,6 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
 
   const filteredFiles = sortedFiles.slice()
 
-  console.log(state.searchTerm)
-
   if (state.searchTerm)
     filteredFiles.filter((file: any) => {
       if (
