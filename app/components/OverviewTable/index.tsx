@@ -14,6 +14,21 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
     return a
   })
 
+  const filteredFiles = sortedFiles.slice()
+
+  console.log(state.searchTerm)
+
+  if (state.searchTerm)
+    filteredFiles.filter((file: any) => {
+      if (
+        file.city.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+        file.fileJury.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+        file.fileId.toLowerCase().includes(state.searchTerm.toLowerCase())
+      )
+        return true
+      return false
+    })
+
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>
@@ -61,14 +76,14 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {sortedFiles?.map((file: any, idx: number) => (
+                {filteredFiles?.map((file: any, idx: number) => (
                   <tr key={idx}>
                     <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>
                       {file.city}
                     </td>
                     <td
                       className={classNames(
-                        idx !== sortedFiles.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'
                       )}
                     >
@@ -76,7 +91,7 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== sortedFiles.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
@@ -84,7 +99,7 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== sortedFiles.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
@@ -104,7 +119,7 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== sortedFiles.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'min-w-[300px] px-3 py-4 text-sm text-gray-500'
                       )}
                     >
@@ -112,7 +127,7 @@ export default function OverviewTable({ files, state }: OverviewTableProps) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== sortedFiles.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                       )}
                     >
