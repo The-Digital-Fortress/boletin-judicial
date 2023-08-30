@@ -7,12 +7,13 @@ import { COLUMNS, MY_JUZGADO_MAP, TABS } from '~/constants'
 import { convertDateToLocale } from '~/utils'
 import { adminLoader } from '~/loader'
 import { useLoaderData } from '@remix-run/react'
+import { convertDateToLocale, timeFromDateToNow } from '~/utils'
 import ComboBox from '~/components/ComboBox'
 import { actionTypes, initialState, resumeReducer } from '~/utils/resumen/resumeReducer'
 export { adminLoader as loader }
 
 const BoletinV2 = () => {
-  const { user, summaryFiles } = useLoaderData()
+  const { user, userData, summaryFiles } = useLoaderData()
   const [state, dispatch] = useReducer(resumeReducer, initialState)
 
   const handleSearch = (event: any) => {
@@ -44,7 +45,7 @@ const BoletinV2 = () => {
             Actualizar
           </button>
           <span>Ultima actualizacion: </span>
-          <span className='text-indigo-600 text-sm font-medium'>Hace 13 minutos</span>
+          <span className='text-indigo-600 text-sm font-medium'> { timeFromDateToNow(userData[0].lastTimeUpdateFiles) } </span>
         </div>
 
         <div className='flex justify-between z-20'>

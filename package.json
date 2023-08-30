@@ -17,6 +17,7 @@
     "@remix-validated-form/with-zod": "^2.0.6",
     "cookie": "^0.5.0",
     "cross-env": "^7.0.3",
+    "date-fns": "^2.30.0",
     "firebase": "^10.0.0",
     "firebase-admin": "^11.10.1",
     "isbot": "^3.6.10",
