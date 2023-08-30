@@ -1,3 +1,5 @@
+import { SquaresPlusIcon, UserIcon } from '@heroicons/react/24/outline'
+
 export const MY_JUZGADO_MAP: Record<string, string> = {
   '1civil': 'JUZGADO PRIMERO CIVIL',
   '2civil': 'JUZGADO SEGUNDO CIVIL',
@@ -24,3 +26,16 @@ export const MY_JUZGADO_MAP: Record<string, string> = {
 }
 
 export const MUNICIPALITIES: string[] = ['Tijuana', 'Mexicali', 'Ensenada', 'Tecate']
+
+export const TABS = [
+  { name: 'Resumen', href: '/boletin/resumen', icon: SquaresPlusIcon, current: true },
+  { name: 'Administrador de archivos', href: '/boletin/administrador', icon: UserIcon, current: false },
+]
+
+export const COLUMNS = [
+  { id: 1, name: 'Ciudad', value: 'ciudad' },
+  { id: 2, name: 'Tribunal / Juzgado', value: 'tribunal' },
+  { id: 3, name: 'Fecha encontrado', value: 'fecha' },
+]
+
+export const STATUSES = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }

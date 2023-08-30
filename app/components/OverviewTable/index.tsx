@@ -1,9 +1,32 @@
-import { classNames, convertDateToLocale } from '~/utils'
-import { MY_JUZGADO_MAP } from '~/constants'
+import { classNames, compareDates, compareStrings, convertDateToLocale } from '~/utils'
+import { MY_JUZGADO_MAP, STATUSES } from '~/constants'
 
-const statuses = { found: 'text-green-400 bg-green-400/10', notFound: 'text-rose-400 bg-rose-400/10' }
+type OverviewTableProps = {
+  files: any
+  state: any
+}
 
-export default function OverviewTable({ files }) {
+export default function OverviewTable({ files, state }: OverviewTableProps) {
+  const sortedFiles = files.slice().sort((a: any, b: any) => {
+    if (state.sortingColumn === 'fecha') return compareDates(a.foundDate, b.foundDate, state.sortingOrder)
+    if (state.sortingColumn === 'ciudad') return compareStrings(a.city, b.city, state.sortingOrder)
+    if (state.sortingColumn === 'tribunal') return compareStrings(a.fileJury, b.fileJury, state.sortingOrder)
+    return a
+  })
+
+  const filteredFiles = sortedFiles.slice()
+
+  if (state.searchTerm)
+    filteredFiles.filter((file: any) => {
+      if (
+        file.city.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+        file.fileJury.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+        file.fileId.toLowerCase().includes(state.searchTerm.toLowerCase())
+      )
+        return true
+      return false
+    })
+
   return (
     <div className='px-4 sm:px-6 lg:px-0'>
       <div className='flow-root'>
@@ -51,12 +74,14 @@ export default function OverviewTable({ files }) {
                 </tr>
               </thead>
               <tbody>
-                {files?.map((file, idx) => (
+                {filteredFiles?.map((file: any, idx: number) => (
                   <tr key={idx}>
-                    <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>{file.city}</td>
+                    <td className='border-b border-gray-200 py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'>
+                      {file.city}
+                    </td>
                     <td
                       className={classNames(
-                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'py-4 pl-4 pr-3 min-w-[300px] text-sm font-medium text-gray-500 sm:pl-6 lg:pl-8'
                       )}
                     >
@@ -64,7 +89,7 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
@@ -72,14 +97,14 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell'
                       )}
                     >
                       <div className='flex items-center gap-3'>
                         <div
                           className={classNames(
-                            convertDateToLocale(file.foundDate) ? statuses.found : statuses.notFound,
+                            convertDateToLocale(file.foundDate) ? STATUSES.found : STATUSES.notFound,
                             'flex-none rounded-full p-1 '
                           )}
                         >
@@ -92,7 +117,7 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'min-w-[300px] px-3 py-4 text-sm text-gray-500'
                       )}
                     >
@@ -100,13 +125,14 @@ export default function OverviewTable({ files }) {
                     </td>
                     <td
                       className={classNames(
-                        idx !== files.length - 1 ? 'border-b border-gray-200' : '',
+                        idx !== filteredFiles.length - 1 ? 'border-b border-gray-200' : '',
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8'
                       )}
                     >
-                      <a href='#' className='text-indigo-600 hover:text-indigo-900'>
+                      {/* TODO: Show detail window */}
+                      {/* <a href='#' className='text-indigo-600 hover:text-indigo-900'>
                         Detalles<span className='sr-only'>, {file.fileTitle}</span>
-                      </a>
+                      </a> */}
                     </td>
                   </tr>
                 ))}

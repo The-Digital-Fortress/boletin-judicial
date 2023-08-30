@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import useNotification from '~/hooks/notifications'
 
 export default function Notification() {
-  const { notification } = useNotification()
+  const { notification, notify } = useNotification()
 
   return (
     <>
@@ -40,7 +40,11 @@ export default function Notification() {
                       type='button'
                       className='inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
                       onClick={() => {
-                        setShow(false)
+                        notify({
+                          message: '',
+                          type: '',
+                          show: false,
+                        })
                       }}
                     >
                       <span className='sr-only'>Close</span>

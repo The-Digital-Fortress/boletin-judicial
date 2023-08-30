@@ -41,13 +41,14 @@ export const action: ActionFunction = async ({ request }) => {
     return { fileId: '' }
   } else {
     const fileId = body.get('fileId')
+    const zeroPaddedFileId = fileId?.padStart(10, '0') // Add 0's to start of the file ID if they're missing
     const fileJury = body.get('fileJury')
     const fileCity = body.get('fileCity')
     const fileDescription = body.get('fileDescription')
-    const file = { fileId, fileJury: fileJury, city: fileCity, description: fileDescription }
+    const file = { fileId: zeroPaddedFileId, fileJury: fileJury, city: fileCity, description: fileDescription }
     const user = await getCurrentUser(request)
     addFile(file, user)
 
-    return { fileId, ok: true };
+    return { fileId, ok: true }
   }
 }
