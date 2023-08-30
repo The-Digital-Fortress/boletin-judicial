@@ -1,3 +1,6 @@
+import { formatDistance, formatRelative, subDays } from 'date-fns'
+import { es } from 'date-fns/locale'
+
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
@@ -16,13 +19,11 @@ export function convertDateToLocale(date: string) {
   return formattedDate
 }
 
-export function minutesPassedFromDateToNow(date: string) {
+export function timeFromDateToNow(date: string) {
   if (!date) return null
 
-  const newDate = new Date(date)
-  const now = new Date()
-  const diff = now.getTime() - newDate.getTime()
-  const minutes = Math.floor(diff / 60000)
+  const fromDate = new Date(date)
+  const timePassed = formatDistance(fromDate, new Date(), { locale: es })
 
-  return minutes
+  return timePassed
 }
