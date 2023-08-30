@@ -59,7 +59,7 @@ export default function ComboBox({ className, columns, state, dispatch }: ComboB
           // @ts-ignore
           displayValue={columnLabel}
         />
-        <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
+        <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md pl-4 focus:outline-none'>
           <span className='text-gray-400 text-sm font-semibold'>Ordernar</span>
           <ChevronUpDownIcon className='h-5 w-5 text-indigo-600' aria-hidden='true' />
         </Combobox.Button>
