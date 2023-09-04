@@ -13,7 +13,6 @@ import { BASE_URL_V2 } from './api'
 import useNotification from '~/hooks/notifications'
 export { adminLoader as loader }
 
-
 const BoletinV2 = () => {
   const { notify } = useNotification()
   const { user, userData, summaryFiles } = useLoaderData()
