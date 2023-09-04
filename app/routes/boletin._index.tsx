@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import Container from '~/components/Container'
 import Tabs from '~/components/Tabs'
 import OverviewTable from '~/components/OverviewTable'
@@ -9,14 +9,43 @@ import { useLoaderData } from '@remix-run/react'
 import { convertDateToLocale, timeFromDateToNow } from '~/utils'
 import ComboBox from '~/components/ComboBox'
 import { actionTypes, initialState, resumeReducer } from '~/utils/resumen/resumeReducer'
+import { BASE_URL_V2 } from './api'
+import useNotification from '~/hooks/notifications'
 export { adminLoader as loader }
 
+
 const BoletinV2 = () => {
+  const { notify } = useNotification()
   const { user, userData, summaryFiles } = useLoaderData()
   const [state, dispatch] = useReducer(resumeReducer, initialState)
 
   const handleSearch = (event: any) => {
     dispatch({ type: actionTypes.SET_SEARCH_TERM, payload: event.target.value })
+  }
+
+  const fetchDataFromApi = async () => {
+    try {
+      console.log(user.uid)
+      const boletinRequest = await fetch(`${BASE_URL_V2}/sync`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-control-allow-origin': '*', // CORS
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          userid: user.uid,
+        }),
+      });
+      const boletinResponse = await boletinRequest.json();
+      window.location.reload(false);
+      notify({
+        message: 'Archivos actualizados exitosamente',
+        type: 'success',
+        show: true,
+      })
+    } catch (error) {
+      console.log("error:", error);
+    }
   }
 
   const filteredFiles = state.searchTerm
@@ -40,7 +69,10 @@ const BoletinV2 = () => {
 
         {/* Last updated section */}
         <div className='text-gray-500 text-sm font-medium flex gap-3 items-center'>
-          <button className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+          <button 
+          className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+          onClick={fetchDataFromApi}
+          >
             Actualizar
           </button>
           <span>Ultima actualizacion: </span>
