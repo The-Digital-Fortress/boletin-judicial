@@ -24,7 +24,7 @@ const BoletinV2 = () => {
 
   const fetchDataFromApi = async () => {
     try {
-      console.log(user.uid)
+      // console.log(user.uid)
       const boletinRequest = await fetch(`${BASE_URL_V2}/sync`, {
         headers: {
           'Content-Type': 'application/json',
@@ -34,16 +34,16 @@ const BoletinV2 = () => {
         body: JSON.stringify({
           userid: user.uid,
         }),
-      });
-      const boletinResponse = await boletinRequest.json();
-      window.location.reload(false);
+      })
+      const boletinResponse = await boletinRequest.json()
+      window.location.reload(false)
       notify({
         message: 'Archivos actualizados exitosamente',
         type: 'success',
         show: true,
       })
     } catch (error) {
-      console.log("error:", error);
+      console.log('error:', error)
     }
   }
 
@@ -68,14 +68,17 @@ const BoletinV2 = () => {
 
         {/* Last updated section */}
         <div className='text-gray-500 text-sm font-medium flex gap-3 items-center'>
-          <button 
-          className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-          onClick={fetchDataFromApi}
+          <button
+            className='block rounded-md bg-indigo-600 px-3 py-1.5 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            onClick={fetchDataFromApi}
           >
             Actualizar
           </button>
           <span>Ultima actualizacion: </span>
-          <span className='text-indigo-600 text-sm font-medium'> { timeFromDateToNow(userData[0].lastTimeUpdateFiles) } </span>
+          <span className='text-indigo-600 text-sm font-medium'>
+            {' '}
+            {timeFromDateToNow(userData[0].lastTimeUpdateFiles)}{' '}
+          </span>
         </div>
 
         <div className='flex justify-between z-20'>
