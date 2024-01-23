@@ -4,3 +4,12 @@ node_modules
 /public/build
 /.netlify
 .env
+
+/functions/\[\[path\]\].js
+/functions/\[\[path\]\].js.map
+/functions/metafile.*
+/functions/version.txt
+.dev.vars
+
+# cloudflare template
+/my-remix-app
