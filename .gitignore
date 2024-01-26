@@ -12,4 +12,5 @@ node_modules
 .dev.vars
 
 # cloudflare template
-/my-remix-app
+my-remix-app/
+my.*
