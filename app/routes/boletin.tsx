@@ -10,7 +10,7 @@ import Navbar from '~/components/Navbar'
 import { BulletList } from 'react-content-loader'
 import Dropdown from '~/components/Dropdown'
 import moment from 'moment-timezone'
-import {  BASE_URL_V1, BASE_URL_V2 } from './api'
+import { BASE_URL_V1, BASE_URL_V2 } from './api'
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
@@ -83,38 +83,20 @@ const Boletin = () => {
             />
           </div>
 
-          <input
-            readOnly
-            type='date'
-            name='date-picker'
-            id='date-picker'
-            value={date.startDate}
-            className='hidden'
-          />
+          <input readOnly type='date' name='date-picker' id='date-picker' value={date.startDate} className='hidden' />
 
           <Dropdown setMunicipality={setMunicipality} />
 
-          <input
-            type='text'
-            name='municipality'
-            id='municipality'
-            value={municipality}
-            className='hidden'
-            readOnly
-          />
+          <input type='text' name='municipality' id='municipality' value={municipality} className='hidden' readOnly />
 
           <label id='input-file-upload' htmlFor='input-file-upload'>
-            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>
-              Subir archivo →
-            </button>
+            <button className='upload-button text-sm font-semibold leading-6 text-indigo-600'>Subir archivo →</button>
           </label>
         </Form>
 
         {actionData?.url && (
           <div className='flex flex-col gap-2'>
-            <span className='font-semibold leading-6 text-indigo-400'>
-              Boletin comparado
-            </span>
+            <span className='font-semibold leading-6 text-indigo-400'>Boletin comparado</span>
 
             <Link
               to={actionData.url}
@@ -144,7 +126,6 @@ const Boletin = () => {
           {/* <UnmatchedFilesTable
             unmatchedFiles={actionData?.data?.unmatchedFiles}
           /> */}
-
         </>
       )}
 
@@ -175,85 +156,103 @@ export const action: ActionFunction = async ({ request }) => {
     Tecate: 'te',
   }
 
-  if (!file)
-    return json({ status: 400, message: 'Es necesario subir un archivo' })
+  if (!file) return json({ status: 400, message: 'Es necesario subir un archivo' })
 
-  if (!date)
-    return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
+  if (!date) return json({ status: 400, message: 'Es necesario seleccionar una fecha' })
 
-  const formData = new FormData();
-  formData.append('xlsxFile', file);
+  const formData = new FormData()
+  formData.append('xlsxFile', file)
 
   const matchedFiles: any = []
   const unmatchedFiles: any = []
 
   // File upload request
-  try{
+  try {
     const fileUploadRequest = await fetch(`${BASE_URL_V1}/file`, {
       headers: {
         'access-control-allow-origin': '*', // CORS
       },
       method: 'POST',
       body: formData,
-    });
-    const fileUploadResponse = await fileUploadRequest.json();
-    paddedIds = JSON.parse(JSON.stringify(fileUploadResponse));
-    console.log("paddedIds:", paddedIds)
+    })
+    const fileUploadResponse = await fileUploadRequest.json()
+    paddedIds = JSON.parse(JSON.stringify(fileUploadResponse))
+    console.log('paddedIds:', paddedIds)
   } catch (error) {
-    console.log("error:", error)
+    console.log('error:', error)
   }
 
-
   // Boletin request
-  const city = municipalityMap[municipality || ''];
-  const queryParams = new URLSearchParams();
-  queryParams.append('date', date.toString());
-  queryParams.append('city', city);
+  const city = municipalityMap[municipality || '']
+  const queryParams = new URLSearchParams()
+  queryParams.append('date', date.toString())
+  queryParams.append('city', city)
 
-  try{
-  const boletinRequest = await fetch(`${BASE_URL_V1}/boletin?${queryParams.toString()}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'access-control-allow-origin': '*', // CORS
-    },
-    method: 'GET',
-  });
-  const boletinResponse = await boletinRequest.json();
-  boletinData = JSON.parse(JSON.stringify(boletinResponse));
-  console.log("boletinData:", boletinData)
-} catch (error) {
-    console.log("error:", error)
+  try {
+    const boletinRequest = await fetch(`${BASE_URL_V1}/boletin?${queryParams.toString()}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'access-control-allow-origin': '*', // CORS
+      },
+      method: 'GET',
+    })
+
+    const boletinPromise = new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        const boletinResponse = await fetch(`${BASE_URL_V1}/boletinWait`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'access-control-allow-origin': '*', // CORS
+          },
+          method: 'GET',
+        })
+
+        if (boletinResponse?.data?.boletinData) {
+          const boletinResponse = await boletinRequest.json()
+          boletinData = JSON.parse(JSON.stringify(boletinResponse))
+          resolve('Resolved')
+        }
+      }, 3000)
+    })
+
+    await boletinPromise
+
+    console.log('⭐', boletinData)
+
+    console.log('boletinData:', boletinData)
+  } catch (error) {
+    console.log('error:', error)
   }
 
   const myJuzgadoMap: Record<string, string> = {
-    "1civil": "JUZGADO PRIMERO CIVIL",
-    "2civil": "JUZGADO SEGUNDO CIVIL",
-    "3civil": "JUZGADO TERCERO CIVIL",
-    "4civil": "JUZGADO CUARTO CIVIL",
-    "5civil": "JUZGADO QUINTO CIVIL",
-    "6civil": "JUZGADO SEXTO CIVIL",
-    "7civil": "JUZGADO SEPTIMO CIVIL",
-    "8civil": "JUZGADO OCTAVO CIVIL",
-    "9civil": "JUZGADO NOVENO CIVIL",
-    "10civil": "JUZGADO DECIMO CIVIL",
-    "11civil": "JUZGADO DECIMO PRIMERO CIVIL",
-    "1familiar": "JUZGADO PRIMERO DE LO FAMILIAR",
-    "2familiar": "JUZGADO SEGUNDO DE LO FAMILIAR",
-    "3familiar": "JUZGADO TERCERO DE LO FAMILIAR",
-    "4familiar": "JUZGADO CUARTO DE LO FAMILIAR",
-    "5familiar": "JUZGADO QUINTO DE LO FAMILIAR",
-    "6familiar": "JUZGADO SEXTO DE LO FAMILIAR",
-    "7familiar": "JUZGADO SEPTIMO DE LO FAMILIAR",
-    "8familiar": "JUZGADO OCTAVO DE LO FAMILIAR",
-    "9familiar": "JUZGADO NOVENO DE LO FAMILIAR",
-    "10familiar": "JUZGADO DECIMO DE LO FAMILIAR",
-    "11familiar": "JUZGADO DECIMO PRIMERO DE LO FAMILIAR",
+    '1civil': 'JUZGADO PRIMERO CIVIL',
+    '2civil': 'JUZGADO SEGUNDO CIVIL',
+    '3civil': 'JUZGADO TERCERO CIVIL',
+    '4civil': 'JUZGADO CUARTO CIVIL',
+    '5civil': 'JUZGADO QUINTO CIVIL',
+    '6civil': 'JUZGADO SEXTO CIVIL',
+    '7civil': 'JUZGADO SEPTIMO CIVIL',
+    '8civil': 'JUZGADO OCTAVO CIVIL',
+    '9civil': 'JUZGADO NOVENO CIVIL',
+    '10civil': 'JUZGADO DECIMO CIVIL',
+    '11civil': 'JUZGADO DECIMO PRIMERO CIVIL',
+    '1familiar': 'JUZGADO PRIMERO DE LO FAMILIAR',
+    '2familiar': 'JUZGADO SEGUNDO DE LO FAMILIAR',
+    '3familiar': 'JUZGADO TERCERO DE LO FAMILIAR',
+    '4familiar': 'JUZGADO CUARTO DE LO FAMILIAR',
+    '5familiar': 'JUZGADO QUINTO DE LO FAMILIAR',
+    '6familiar': 'JUZGADO SEXTO DE LO FAMILIAR',
+    '7familiar': 'JUZGADO SEPTIMO DE LO FAMILIAR',
+    '8familiar': 'JUZGADO OCTAVO DE LO FAMILIAR',
+    '9familiar': 'JUZGADO NOVENO DE LO FAMILIAR',
+    '10familiar': 'JUZGADO DECIMO DE LO FAMILIAR',
+    '11familiar': 'JUZGADO DECIMO PRIMERO DE LO FAMILIAR',
   }
 
   const excelJuzgadosConverted = paddedIds.data.zeroPaddedColumns.map(subarray => [
-    subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()] || subarray[0],
-    subarray[1]
-  ]);
+    (subarray[0] && myJuzgadoMap[subarray[0].toLowerCase()]) || subarray[0],
+    subarray[1],
+  ])
 
   if (boletinData['status'] !== 200) {
     return json({
@@ -266,10 +265,10 @@ export const action: ActionFunction = async ({ request }) => {
     boletinData.data.boletinData.forEach(jury => {
       jury?.files.forEach((file, index) => {
         // console.log("file1:", file[1], " jury key:", jury.key)
-        const fileExists = excelJuzgadosConverted.some(([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
+        const fileExists = excelJuzgadosConverted.some(
+          ([column1, column2]) => jury.key.includes(column1) && column2 === file[1]
         )
-        if (fileExists)
-          matchedFiles.push({ '3': jury?.key, ...file })
+        if (fileExists) matchedFiles.push({ '3': jury?.key, ...file })
         else unmatchedFiles.push({ '3': jury?.key, ...file })
       })
     })
@@ -281,5 +280,3 @@ export const action: ActionFunction = async ({ request }) => {
     url: boletinData.url,
   })
 }
-
-
