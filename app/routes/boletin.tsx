@@ -1,18 +1,17 @@
-import type { LinksFunction } from '@remix-run/node'
 import { useState } from 'react'
-import { json } from '@remix-run/node'
-import type { V2_MetaFunction } from '@remix-run/react'
+import { json } from '@remix-run/server-runtime'
+import type { MetaFunction } from '@remix-run/react'
 import Datepicker from 'react-tailwindcss-datepicker'
-import type { ActionFunction } from '@remix-run/node'
+import type { ActionFunction } from '@remix-run/server-runtime'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
-import MatchedFilesTable from '~/components/MatchedTable'
-import Navbar from '~/components/Navbar'
+import MatchedFilesTable from '../components/MatchedTable'
+import Navbar from '../components/Navbar'
 import { BulletList } from 'react-content-loader'
-import Dropdown from '~/components/Dropdown'
+import Dropdown from '../components/Dropdown'
 import moment from 'moment-timezone'
 import {  BASE_URL_V1, BASE_URL_V2 } from './api'
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: 'Expediente Legal - Buscador' }]
 }
 
